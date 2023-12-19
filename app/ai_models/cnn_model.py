@@ -35,9 +35,9 @@ def train_and_save_model(train_data_dir, model_save_path):
     # Save the model
     model.save(model_save_path)
 
-def predict_image(model_path, img_path):
+def predict_image(img_path):
     # Load the trained model
-    model = tf.keras.models.load_model(model_path)
+    model = tf.keras.models.load_model('/Users/pranaymishra/Desktop/sih1429/ommas_main/app/ai_models/tile_detection_model.h5')
 
     # Load and preprocess a new image
     img = image.load_img(img_path, target_size=(224, 224))
@@ -50,6 +50,10 @@ def predict_image(model_path, img_path):
 
     # Print the prediction (1 if tile is present, 0 otherwise)
     print(predictions)
+    if predictions[0][0] > 0.5:
+        return 'Tile detected'
+    else:
+        return 'No tile detected'
 
 
 # train_and_save_model('/Users/pranaymishra/Desktop/OMMAS_Modeling/images', 'tile_detection_model.h5')

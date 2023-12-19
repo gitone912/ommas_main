@@ -7,6 +7,7 @@ from .models import *
 from .gpt import *
 from .ai_models.ocr import *
 import csv
+from .ai_models.cnn_model import *
 # Create your views here.
 
 def bot(request):
@@ -86,14 +87,10 @@ def get_coordinates(request):
             lng1 = request.POST.get('lng', '')
             lat2 = request.POST.get('lat2', '')
             lng2 = request.POST.get('lng2', '')
+            pav_length = request.POST.get('pav_length')
+            print("pav_length",pav_length)
             
-            # Assuming you have a Map model to store coordinates in the database
-            # You can save the coordinates to the database or perform any other actions
-            # Example: Map.objects.create(latitude=lat1, longitude=lng1)
-            #          Map.objects.create(latitude=lat2, longitude=lng2)
-
-            # Construct the map URL with the coordinates
-            map_url = f'http://127.0.0.1:8000/map/?lat={lat1}&lng={lng1}&lat2={lat2}&lng2={lng2}'
+            map_url = f'http://127.0.0.1:8000/map/?lat={lat1}&lng={lng1}&lat2={lat2}&lng2={lng2}&pav_length={pav_length}'
 
             # Redirect to the map URL
             return redirect(map_url)
@@ -112,14 +109,16 @@ def map(request):
     lng1 = request.GET.get('lng', '')
     lat2 = request.GET.get('lat2', '')
     lng2 = request.GET.get('lng2', '')
-
+    pav_length = request.GET.get('pav_length', '')
+    print("pav_length",pav_length)
+    
     # Convert the coordinates into a list of lists
     coordinates_list = [[float(lat1), float(lng1)], [float(lat2), float(lng2)]]
 
     data = coordinates_list
     print(data)
     print("hello")
-    return render(request, 'map.html', {'data': data})
+    return render(request, 'map.html', {'data': data,'pav_length':pav_length})
 
 
 
@@ -137,3 +136,21 @@ def quality_monitor_data(request):
     csv_data = csv_to_dict(csv_file_path)
 
     return render(request, 'quality_monitor_data.html', {'csv_data': csv_data})
+
+def upload_data(request):
+    if request.method == 'POST':
+        try:
+            file = request.FILES['file']
+            print(file)
+            return render(request, 'upload_data.html', {'success': 'File uploaded successfully.'})
+        except Exception as e:
+            return render(request, 'upload_data.html', {'error': str(e)})
+    return render(request, 'upload.html')
+
+def joint_inspection_cnn(request):
+    if request.method == 'POST' and 'image' in request.FILES:
+        image = request.FILES['image']
+        prediction = predict_image(image.temporary_file_path())  # Update with your actual prediction function
+        return render(request, 'cnn.html', {'prediction': prediction})
+
+    return render(request, 'cnn.html')

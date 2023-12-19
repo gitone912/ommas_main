@@ -1,0 +1,61 @@
+State,IMS_Year_Category,Location,Description,Total_Inspection_Completed_Works,Completed_Works_U%,Ongoing_Works,Ongoing_U%,Maintenance_Works,Maintenance_U%,Bridge_Works,Bridge_U%,Total_Inspection
+State,1,Andaman And Nicobar,        Unsatisfactory works grading during  2022 - 2023,21,0,0.00%,3,14.29%,0,0.00%,0,0.00%
+State,1,Andaman And Nicobar,        Unsatisfactory works grading during  2023 - 2024,45,2,4.44%,0,0.00%,0,0.00%,0,0.00%
+State,2,Andhra Pradesh,        Unsatisfactory works grading during  2022 - 2023,130,0,0.00%,1,0.77%,0,0.00%,0,0.00%
+State,2,Andhra Pradesh,        Unsatisfactory works grading during  2023 - 2024,341,0,0.00%,2,0.59%,8,2.35%,0,0.00%
+State,3,Arunachal Pradesh,        Unsatisfactory works grading during  2022 - 2023,146,0,0.00%,0,0.00%,4,2.74%,0,0.00%
+State,3,Arunachal Pradesh,        Unsatisfactory works grading during  2023 - 2024,256,0,0.00%,1,0.39%,5,1.95%,5,1.95%
+State,4,Assam,        Unsatisfactory works grading during  2022 - 2023,871,0,0.00%,7,0.80%,59,6.77%,4,0.46%
+State,4,Assam,        Unsatisfactory works grading during  2023 - 2024,"2,042",4,0.20%,6,0.29%,176,8.62%,2,0.10%
+State,5,Bihar,        Unsatisfactory works grading during  2022 - 2023,"1,315",0,0.00%,9,0.68%,176,13.38%,41,3.12%
+State,5,Bihar,        Unsatisfactory works grading during  2023 - 2024,"3,173",13,0.41%,11,0.35%,282,8.89%,95,2.99%
+State,6,Chhattisgarh,        Unsatisfactory works grading during  2022 - 2023,749,0,0.00%,0,0.00%,2,0.27%,0,0.00%
+State,6,Chhattisgarh,        Unsatisfactory works grading during  2023 - 2024,"1,328",0,0.00%,0,0.00%,4,0.30%,0,0.00%
+State,7,Gujarat,        Unsatisfactory works grading during  2022 - 2023,166,0,0.00%,0,0.00%,7,4.22%,0,0.00%
+State,7,Gujarat,        Unsatisfactory works grading during  2023 - 2024,287,3,1.05%,5,1.74%,4,1.39%,0,0.00%
+State,8,Haryana,        Unsatisfactory works grading during  2022 - 2023,75,0,0.00%,0,0.00%,0,0.00%,0,0.00%
+State,8,Haryana,        Unsatisfactory works grading during  2023 - 2024,218,0,0.00%,0,0.00%,7,3.21%,0,0.00%
+State,9,Himachal Pradesh,        Unsatisfactory works grading during  2022 - 2023,227,0,0.00%,8,3.52%,20,8.81%,2,0.88%
+State,9,Himachal Pradesh,        Unsatisfactory works grading during  2023 - 2024,438,3,0.68%,6,1.37%,36,8.22%,0,0.00%
+State,10,Jammu And Kashmir,        Unsatisfactory works grading during  2022 - 2023,254,0,0.00%,3,1.18%,12,4.72%,0,0.00%
+State,10,Jammu And Kashmir,        Unsatisfactory works grading during  2023 - 2024,901,4,0.44%,22,2.44%,81,8.99%,1,0.11%
+State,11,Jharkhand,        Unsatisfactory works grading during  2022 - 2023,675,0,0.00%,3,0.44%,14,2.07%,0,0.00%
+State,11,Jharkhand,        Unsatisfactory works grading during  2023 - 2024,"1,245",0,0.00%,1,0.08%,28,2.25%,0,0.00%
+State,12,Karnataka,        Unsatisfactory works grading during  2022 - 2023,328,0,0.00%,0,0.00%,0,0.00%,0,0.00%
+State,12,Karnataka,        Unsatisfactory works grading during  2023 - 2024,614,2,0.33%,2,0.33%,1,0.16%,0,0.00%
+State,13,Kerala,        Unsatisfactory works grading during  2022 - 2023,140,0,0.00%,1,0.71%,21,15.00%,0,0.00%
+State,13,Kerala,        Unsatisfactory works grading during  2023 - 2024,264,0,0.00%,7,2.65%,18,6.82%,0,0.00%
+State,14,Ladakh,        Unsatisfactory works grading during  2022 - 2023,0,0,0.00%,0,0.00%,0,0.00%,0,0.00%
+State,14,Ladakh,        Unsatisfactory works grading during  2023 - 2024,31,0,0.00%,1,3.23%,0,0.00%,0,0.00%
+State,15,Madhya Pradesh,        Unsatisfactory works grading during  2022 - 2023,"1,687",1,0.06%,5,0.30%,73,4.33%,1,0.06%
+State,15,Madhya Pradesh,        Unsatisfactory works grading during  2023 - 2024,"2,591",1,0.04%,7,0.27%,153,5.91%,8,0.31%
+State,16,Maharashtra,        Unsatisfactory works grading during  2022 - 2023,380,0,0.00%,7,1.84%,0,0.00%,0,0.00%
+State,16,Maharashtra,        Unsatisfactory works grading during  2023 - 2024,668,0,0.00%,18,2.69%,2,0.30%,0,0.00%
+State,17,Manipur,        Unsatisfactory works grading during  2022 - 2023,75,0,0.00%,0,0.00%,0,0.00%,0,0.00%
+State,17,Manipur,        Unsatisfactory works grading during  2023 - 2024,19,0,0.00%,0,0.00%,0,0.00%,0,0.00%
+State,18,Meghalaya,        Unsatisfactory works grading during  2022 - 2023,154,0,0.00%,1,0.65%,2,1.30%,0,0.00%
+State,18,Meghalaya,        Unsatisfactory works grading during  2023 - 2024,194,1,0.52%,3,1.55%,1,0.52%,0,0.00%
+State,19,Mizoram,        Unsatisfactory works grading during  2022 - 2023,49,1,2.04%,1,2.04%,1,2.04%,0,0.00%
+State,19,Mizoram,        Unsatisfactory works grading during  2023 - 2024,73,1,1.37%,4,5.48%,0,0.00%,0,0.00%
+State,20,Nagaland,        Unsatisfactory works grading during  2022 - 2023,2,0,0.00%,0,0.00%,0,0.00%,0,0.00%
+State,20,Nagaland,        Unsatisfactory works grading during  2023 - 2024,36,0,0.00%,0,0.00%,0,0.00%,0,0.00%
+State,21,Odisha,        Unsatisfactory works grading during  2022 - 2023,"1,369",6,0.44%,38,2.78%,249,18.19%,3,0.22%
+State,21,Odisha,        Unsatisfactory works grading during  2023 - 2024,"2,818",11,0.39%,97,3.44%,561,19.91%,3,0.11%
+State,22,Punjab,        Unsatisfactory works grading during  2022 - 2023,132,0,0.00%,0,0.00%,11,8.33%,0,0.00%
+State,22,Punjab,        Unsatisfactory works grading during  2023 - 2024,300,0,0.00%,2,0.67%,1,0.33%,0,0.00%
+State,23,Rajasthan,        Unsatisfactory works grading during  2022 - 2023,229,0,0.00%,0,0.00%,19,8.30%,0,0.00%
+State,23,Rajasthan,        Unsatisfactory works grading during  2023 - 2024,473,0,0.00%,7,1.48%,11,2.33%,0,0.00%
+State,24,Sikkim,        Unsatisfactory works grading during  2022 - 2023,49,0,0.00%,3,6.12%,0,0.00%,0,0.00%
+State,24,Sikkim,        Unsatisfactory works grading during  2023 - 2024,105,0,0.00%,4,3.81%,0,0.00%,0,0.00%
+State,25,Tamil Nadu,        Unsatisfactory works grading during  2022 - 2023,801,1,0.12%,0,0.00%,49,6.12%,0,0.00%
+State,25,Tamil Nadu,        Unsatisfactory works grading during  2023 - 2024,809,0,0.00%,0,0.00%,21,2.60%,0,0.00%
+State,26,Telangana,        Unsatisfactory works grading during  2022 - 2023,333,0,0.00%,1,0.30%,53,15.92%,1,0.30%
+State,26,Telangana,        Unsatisfactory works grading during  2023 - 2024,326,0,0.00%,3,0.92%,21,6.44%,0,0.00%
+State,27,Tripura,        Unsatisfactory works grading during  2022 - 2023,42,0,0.00%,1,2.38%,19,45.24%,0,0.00%
+State,27,Tripura,        Unsatisfactory works grading during  2023 - 2024,176,0,0.00%,0,0.00%,29,16.48%,0,0.00%
+State,28,Uttar Pradesh,        Unsatisfactory works grading during  2022 - 2023,"1,361",0,0.00%,23,1.69%,63,4.63%,0,0.00%
+State,28,Uttar Pradesh,        Unsatisfactory works grading during  2023 - 2024,"3,670",8,0.22%,47,1.28%,98,2.67%,0,0.00%
+State,29,Uttarakhand,        Unsatisfactory works grading during  2022 - 2023,422,6,1.42%,11,2.61%,26,6.16%,3,0.71%
+State,29,Uttarakhand,        Unsatisfactory works grading during  2023 - 2024,761,6,0.79%,16,2.10%,66,8.67%,19,2.50%
+State,30,West Bengal,        Unsatisfactory works grading during  2022 - 2023,578,4,0.69%,0,0.00%,50,8.65%,0,0.00%
+State,30,West Bengal,        Unsatisfactory works grading during  2023 - 2024,"1,291",0,0.00%,11,0.85%,224,17.35%,0,0.00%

@@ -12,6 +12,8 @@ urlpatterns = [
     path('map/',map, name='map'),
     path('get_coordinates/',get_coordinates, name='get_coordinates'),
     path('quality_monitor_data/',quality_monitor_data, name='quality_monitor_data'),
+    path('upload/',upload_data, name='upload'),
+    path('joint_inspection/',joint_inspection_cnn, name='joint_inspection'),
 
     
 ]

@@ -2,9 +2,9 @@
     var chart = document.querySelector('#chartline')
     var options = {
         series: [{
-            name: 'Your Daily Task Performance',
+            
             type: 'area',
-            data: [ 4,3,2,6]
+            data: [ 4,2.5,7,5,6]
         }, {
             name: '',
             type: 'line',
@@ -24,7 +24,7 @@
             type: 'solid',
             opacity: [0.35, 1],
         },
-        labels: ['feature 1', 'feature 2 ', 'feature 3', 'feature 4'],
+        labels: ['qm', 'sqm ', 'nqm', 'qcr','t-sheets'],
         markers: {
             size: 0
         },
@@ -59,10 +59,11 @@
 <script>
     var chart = document.querySelector('#chartpie')
     var options = {
-        series: [44, 55, 67, 83],
+        name: 'Regraded Grading Abstract for the year 2023',
+        series: [21,160,106,376,448,175,89,60,104,129,298,186,119,7,376,338,67,144,38,52,435,12,126,127,95,187,136,73,549,203,94,],
         chart: {
             height: 350,
-            type: 'pie',
+            type: 'donut',
         },
         plotOptions: {
             radialBar: {
@@ -84,8 +85,8 @@
                 }
             }
         },
-        labels: ['feature 1', 'feature 2', 'feature 3', 'feature 4'],
+        labels: ['Andaman and Nicobar', 'Andhra pradesh', 'Arunachal Pradesh', 'Assam','Bihar','Chattisgarh','Gujrat','Haryana','Himachal Pradesh','Jammu and Kashmir','Jharkhand','Karnataka','Kerala','Ladakh','Madhya Pradesh','Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Puducherry','Punjab','Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal'],
     };
     var chart = new ApexCharts(chart, options);
     chart.render();
-</script>--
+</script>
