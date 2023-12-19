@@ -10,6 +10,7 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('',login_view, name='login'),
     path('map/',map, name='map'),
+    path('get_coordinates/',get_coordinates, name='get_coordinates'),
 
     
 ]

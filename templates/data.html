@@ -4,7 +4,7 @@
         series: [{
             name: 'Your Daily Task Performance',
             type: 'area',
-            data: [4, 5, 3, 4, 3, 4, 2, 4, 3, 4, 3]
+            data: [ 4,3,2,6]
         }, {
             name: '',
             type: 'line',
@@ -24,9 +24,7 @@
             type: 'solid',
             opacity: [0.35, 1],
         },
-        labels: ['Dec 01', 'Dec 02', 'Dec 03', 'Dec 04', 'Dec 05', 'Dec 06', 'Dec 07', 'Dec 08', 'Dec 09 ',
-            'Dec 10', 'Dec 11'
-        ],
+        labels: ['feature 1', 'feature 2 ', 'feature 3', 'feature 4'],
         markers: {
             size: 0
         },
@@ -64,7 +62,7 @@
         series: [44, 55, 67, 83],
         chart: {
             height: 350,
-            type: 'radialBar',
+            type: 'pie',
         },
         plotOptions: {
             radialBar: {
@@ -86,8 +84,8 @@
                 }
             }
         },
-        labels: ['4 Sessions attended', '3 Sessions missed', '2 Sessions cancelled', '1 Session pending'],
+        labels: ['feature 1', 'feature 2', 'feature 3', 'feature 4'],
     };
     var chart = new ApexCharts(chart, options);
     chart.render();
-</script>
+</script>--

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure Maps - Point Selection</title>
+    <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" />
+    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
+</head>
+<body>
+    <div id="map" style="height: 500px;"></div>
+    <div>
+        <label>Point 1: </label>
+        <span id="point1"></span>
+        <button onclick="resetPoint(1)">Reset Coordinate 1</button>
+    </div>
+    <div>
+        <label>Point 2: </label>
+        <span id="point2"></span>
+        <button onclick="resetPoint(2)">Reset Coordinate 2</button>
+    </div>
+    <button onclick="resetPoints()">Reset All Points</button>
+    <form id="coordinatesForm" action="{% url 'get_coordinates' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" id="latInput" name="lat" value="">
+        <input type="hidden" id="lngInput" name="lng" value="">
+        <input type="hidden" id="latInput2" name="lat2" value="">
+        <input type="hidden" id="lngInput2" name="lng2" value="">
+        <button type="button" onclick="sendCoordinates()">Send</button>
+    </form>
+
+    <script>
+        var map, popup, markers = [];
+
+        // Set Azure Maps subscription key
+        atlas.setSubscriptionKey('UTm_584wVsoFNDARJsYf18QU7tMaigF7t3g2xy7fLDA');
+
+        function initMap() {
+            map = new atlas.Map('map', {
+                center: [78.6569, 11.1271], // India, Tamil Nadu
+                zoom: 6,
+                view: 'Auto',
+                authOptions: {
+                    // Use an Azure Maps key
+                    authType: 'subscriptionKey',
+                    subscriptionKey: 'UTm_584wVsoFNDARJsYf18QU7tMaigF7t3g2xy7fLDA'
+                }
+            });
+
+            map.events.add('click', function (e) {
+                if (markers.length < 2) {
+                    if (!popup) {
+                        popup = new atlas.Popup();
+                        map.popups.add(popup);
+                    }
+
+                    // Get the clicked coordinates
+                    var coordinates = e.position;
+
+                    // Display coordinates in the popup
+                    popup.setOptions({
+                        position: coordinates,
+                        content: '<div>Coordinates: ' + coordinates[0].toFixed(4) + ', ' + coordinates[1].toFixed(4) + '</div>'
+                    });
+
+                    // Update the UI with the selected coordinates
+                    updatePointCoordinates(coordinates);
+
+                    // Display marker on the map
+                    displayMarker(coordinates);
+                }
+            });
+        }
+
+        function updatePointCoordinates(coordinates) {
+            var point1Element = document.getElementById('point1');
+            var point2Element = document.getElementById('point2');
+
+            // Check if point1 is already set
+            if (!point1Element.textContent) {
+                point1Element.textContent = coordinates[0].toFixed(4) + ', ' + coordinates[1].toFixed(4);
+            } else if (!point2Element.textContent) {
+                point2Element.textContent = coordinates[0].toFixed(4) + ', ' + coordinates[1].toFixed(4);
+            }
+        }
+
+        function displayMarker(coordinates) {
+            // Create a marker and add it to the map
+            var marker = new atlas.HtmlMarker({
+                position: coordinates,
+                color: 'DodgerBlue',
+                text: '📍'
+            });
+
+            markers.push(marker);
+            map.markers.add(markers);
+        }
+
+        function resetPoint(pointNumber) {
+            // Clear the UI for the specified point
+            document.getElementById('point' + pointNumber).textContent = '';
+
+            // Remove the marker for the specified point
+            if (markers[pointNumber - 1]) {
+                map.markers.remove(markers[pointNumber - 1]);
+                markers[pointNumber - 1] = null;
+            }
+        }
+
+        function sendCoordinates() {
+            // Get the coordinates from the UI
+            var point1 = document.getElementById('point1').textContent;
+            var point2 = document.getElementById('point2').textContent;
+
+            // Extract latitude and longitude
+            var lat1 = parseFloat(point1.split(',')[0]);
+            var lng1 = parseFloat(point1.split(',')[1]);
+            var lat2 = parseFloat(point2.split(',')[0]);
+            var lng2 = parseFloat(point2.split(',')[1]);
+
+            // Set the values in the hidden input fields
+            document.getElementById('latInput').value = lat1 || '';
+            document.getElementById('lngInput').value = lng1 || '';
+            document.getElementById('latInput2').value = lat2 || '';
+            document.getElementById('lngInput2').value = lng2 || '';
+
+            // Submit the form
+            document.getElementById('coordinatesForm').submit();
+        }
+
+        function resetPoints() {
+            // Clear the UI for both points
+            document.getElementById('point1').textContent = '';
+            document.getElementById('point2').textContent = '';
+
+            // Clear all markers on the map
+            map.markers.clear();
+            markers = [];
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            initMap();
+        });
+
+    </script>
+</body>
+</html>
