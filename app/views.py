@@ -154,3 +154,6 @@ def joint_inspection_cnn(request):
         return render(request, 'cnn.html', {'prediction': prediction})
 
     return render(request, 'cnn.html')
+
+def usfg(request):
+    return render(request,'chart.html')

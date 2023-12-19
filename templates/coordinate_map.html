@@ -118,7 +118,7 @@
             var lng1 = parseFloat(point1.split(',')[1]);
             var lat2 = parseFloat(point2.split(',')[0]);
             var lng2 = parseFloat(point2.split(',')[1]);
-            var pavLength = parseFloat('{{ pav_length | flatten}}');
+            var pavLength = parseFloat('{{ pav_length }}');
 
             // Set the values in the hidden input fields
             document.getElementById('latInput').value = lat1 || '';
