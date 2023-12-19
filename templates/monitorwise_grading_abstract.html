@@ -3,48 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donut Chart</title>
+    <title>Bar Chart</title>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 </head>
 <body>
 
-<div class="bg-white shadow-lg" id="monitor"></div>
+<div class="bg-white shadow-lg" id="chart"></div>
 
 <script>
-    var chart = document.querySelector('#monitor');
+    var chart = document.querySelector('#chart');
     var options = {
         chart: {
             height: 350,
-            type: 'donut',
+            type: 'bar',
         },
-        series: [21, 160, 106, 376, 448, 175, 89, 60, 104, 129, 298, 186, 119, 7, 376, 338, 67, 144, 38, 52, 435, 12, 126, 127, 95, 187, 136, 73, 549, 203, 94],
-        labels: ['Andaman and Nicobar', 'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jammu and Kashmir', 'Jharkhand', 'Karnataka', 'Kerala', 'Ladakh', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Puducherry', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal'],
-        plotOptions: {
-            pie: {
-                donut: {
-                    labels: {
-                        show: true,
-                        name: {
-                            fontSize: '22px',
-                        },
-                        value: {
-                            fontSize: '16px',
-                        },
-                        total: {
-                            show: true,
-                            label: 'Best monitor in the district',
-                            formatter: function (w) {
-                                return "";
-                            }
-                        }
-                    }
-                }
-            }
+        series: [{
+            name: 'Series 1',
+            data: [21, 160, 106, 376, 448, 175, 89, 60, 104, 129, 298, 186, 119, 7, 376, 338, 67, 144, 38, 52, 435, 12, 126, 127, 95, 187, 136, 73, 549, 203, 94],
+        }],
+        xaxis: {
+            categories: ['Andaman and Nicobar', 'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jammu and Kashmir', 'Jharkhand', 'Karnataka', 'Kerala', 'Ladakh', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Puducherry', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal'],
         },
     };
 
-    var chart = new ApexCharts(chart, options);
-    chart.render();
+    var chartInstance = new ApexCharts(chart, options);
+    chartInstance.render();
 </script>
 
 </body>
