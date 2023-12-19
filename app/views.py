@@ -25,7 +25,6 @@ def bot(request):
             print("error")
             return render(request, 'bot.html', {'error': str(e)})
 
-    # Retrieve all chat history
     chat_history = Chat.objects.all().order_by('-timestamp')
     return render(request, 'bot.html', {'chat_history': chat_history})
 
