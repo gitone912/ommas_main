@@ -8,6 +8,7 @@ from .gpt import *
 from .ai_models.ocr import *
 import csv
 from .ai_models.cnn_model import *
+import pandas as pd
 # Create your views here.
 
 def bot(request):
@@ -156,7 +157,20 @@ def joint_inspection_cnn(request):
     return render(request, 'cnn.html')
 
 def usfg(request):
-    return render(request,'chart.html')
+    # Assuming the path to your CSV file is 'sqm/bokaro.csv'
+    path1 = '/Users/pranaymishra/Desktop/sih1429/ommas_main/static/data/unsatisfactory_work_grade/sqm/indiasqm.csv'
+    path2 = '/Users/pranaymishra/Desktop/sih1429/ommas_main/static/data/unsatisfactory_work_grade/sqm/jharkhand.csv'
+    path3 = '/Users/pranaymishra/Desktop/sih1429/ommas_main/static/data/unsatisfactory_work_grade/sqm/bokaro.csv'
+    
+    # Read data from CSV into a pandas DataFrame
+    df = pd.read_csv(path1)
+    
+    # Convert DataFrame to a list of dictionaries
+    data_list = df.to_dict(orient='records')
+    
+    # Pass the data_list to the template
+    return render(request, 'chart.html', {'data_list': data_list})
+
 
 def mga(request):
     return render(request,'monitorwise_grading_abstract.html')
