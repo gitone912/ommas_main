@@ -1,0 +1,37 @@
+<!-- myapp/templates/myapp/csv_table.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Table</title>
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-4">
+    <h2 class="text-2xl font-bold mb-4">CSV Data Table</h2>
+    <table class="w-full border-collapse border border-gray-300">
+        <thead>
+            <tr class="bg-gray-200">
+                {% for header in csv_data.0.keys %}
+                    <th class="p-2">{{ header }}</th>
+                {% endfor %}
+                <th class="p-2">Show Map</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in csv_data %}
+                <tr class="border-t border-gray-300">
+                    {% for value in row.values %}
+                        <td class="p-2">{{ value }}</td>
+                    {% endfor %}
+                    <td class="p-2">
+                        <!-- Add your "Show Map" content here -->
+                        <a href="{% url 'get_coordinates' %}?pav_length={{ row.IMS_PAV_LENGTH }}" class="text-blue-500 underline">Show Map</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

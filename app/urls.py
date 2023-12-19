@@ -11,6 +11,7 @@ urlpatterns = [
     path('',login_view, name='login'),
     path('map/',map, name='map'),
     path('get_coordinates/',get_coordinates, name='get_coordinates'),
+    path('quality_monitor_data/',quality_monitor_data, name='quality_monitor_data'),
 
     
 ]

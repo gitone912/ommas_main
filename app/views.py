@@ -6,6 +6,7 @@ from django.http import HttpResponse, JsonResponse
 from .models import *
 from .gpt import *
 from .ai_models.ocr import *
+import csv
 # Create your views here.
 
 def bot(request):
@@ -77,6 +78,8 @@ def dashboard(request):
 from django.shortcuts import render
 
 def get_coordinates(request):
+    pav_length = request.GET.get('pav_length', '')
+    print("pav_length",pav_length)
     if request.method == 'POST':
         try:
             lat1 = request.POST.get('lat', '')
@@ -99,7 +102,7 @@ def get_coordinates(request):
             print(e)
 
     # Render the get_coordinates.html template for initial page load
-    return render(request, 'coordinate_map.html')
+    return render(request, 'coordinate_map.html',{'pav_length':pav_length})
 
 
 def map(request):
@@ -122,3 +125,15 @@ def map(request):
 
 def ocr_reader(request):
     return render(request, 'ocr.html')
+
+def csv_to_dict(file_path):
+    with open(file_path, 'r') as file:
+        reader = csv.DictReader(file)
+        return list(reader)
+
+def quality_monitor_data(request):
+    csv_file_path = 'static/data/ariyalur.csv'  
+
+    csv_data = csv_to_dict(csv_file_path)
+
+    return render(request, 'quality_monitor_data.html', {'csv_data': csv_data})
