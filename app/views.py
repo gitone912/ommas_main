@@ -157,3 +157,6 @@ def joint_inspection_cnn(request):
 
 def usfg(request):
     return render(request,'chart.html')
+
+def mga(request):
+    return render(request,'monitorwise_grading_abstract.html')

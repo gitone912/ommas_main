@@ -15,6 +15,6 @@ urlpatterns = [
     path('upload/',upload_data, name='upload'),
     path('joint_inspection/',joint_inspection_cnn, name='joint_inspection'),
     path('usfg/',usfg, name='usfg'),
-
+    path('mga/',mga, name='mga'),
     
 ]
