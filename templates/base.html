@@ -29,7 +29,7 @@
                     <div class="flex justify-center">
                         <div class="">
                             <img class="hidden h-24 w-24 rounded-full sm:block object-cover mr-2 border-4 border-green-400"
-                                src="https://media.istockphoto.com/id/1271128182/id/vektor/kecerdasan-buatan-ai-skema-baris-ikon-vektor-ilustrasi.jpg?s=1024x1024&w=is&k=20&c=avLpxmYmQ_eNscW8Og0K04HIFX2qlAiWjyEVXZGhluo=" alt="">
+                                src="https://media.istockphoto.com/id/1281036668/id/vektor/layanan-kesehatan-digital-kecerdasan-buatan-ai-dalam-ikon-jalur-kesehatan-stroke-yang-bisa.jpg?s=1024x1024&w=is&k=20&c=RWbl3PXPehR1bTO8CWIuAYiFY4o5-E72fUfItuIW4RA=" alt="">
                             <p class="font-bold text-base  text-gray-400 pt-2 text-center w-24">Sahaj Inspect</p>
                         </div>
                     </div>
@@ -59,7 +59,7 @@
                             </li>
                             <li class="relative px-2 py-1 ">
                                 <a class="inline-flex items-center w-full text-sm font-semibold text-white transition-colors duration-150 cursor-pointer hover:text-green-500" 
-                                    href="/dashboard">
+                                    href="{% url "mga" %}">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -68,26 +68,16 @@
                                     <span class="ml-4">Moniterwise grading abstract</span>
                                 </a>
                             </li>
+                           
                             <li class="relative px-2 py-1 ">
                                 <a class="inline-flex items-center w-full text-sm font-semibold text-white transition-colors duration-150 cursor-pointer hover:text-green-500" 
-                                    href="/dashboard">
+                                    href="{% url "joint_inspection" %}">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                                     </svg>
-                                    <span class="ml-4">Maps</span>
-                                </a>
-                            </li>
-                            <li class="relative px-2 py-1 ">
-                                <a class="inline-flex items-center w-full text-sm font-semibold text-white transition-colors duration-150 cursor-pointer hover:text-green-500" 
-                                    href="/dashboard">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                                    </svg>
-                                    <span class="ml-4">Grading automation</span>
+                                    <span class="ml-4">Inspection Grading automation</span>
                                 </a>
                             </li>
                             <li class="relative px-2 py-1 ">
@@ -99,6 +89,17 @@
                                             d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                                     </svg>
                                     <span class="ml-4">Report Chatbot</span>
+                                </a>
+                            </li>
+                            <li class="relative px-2 py-1 ">
+                                <a class="inline-flex items-center w-full text-sm font-semibold text-white transition-colors duration-150 cursor-pointer hover:text-green-500" 
+                                    href="{% url "quality_monitor_data" %}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                    </svg>
+                                    <span class="ml-4">Quality Monitor (Distance)</span>
                                 </a>
                             </li>
                         </ul>
