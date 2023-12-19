@@ -1,186 +1,42 @@
 {% extends 'base.html' %}
 {% block content %}
-<link href="https://cdn.webdatarocks.com/latest/webdatarocks.min.css" rel="stylesheet" />
-<script src="https://cdn.webdatarocks.com/latest/webdatarocks.toolbar.min.js"></script>
-<script src="https://cdn.webdatarocks.com/latest/webdatarocks.js"></script>
-<script src="https://cdn.webdatarocks.com/latest/webdatarocks.highcharts.js"></script>
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/drilldown.js"></script>
 
-<table>
-    <tr>
-        <td style="width: 800px;">
-            <div id="wdr-component"></div>
-        </td>
-        <td>
-            <div id="highchartsContainer" style="width:800px;"></div>
-        </td>
-    </tr>
-</table>
-<script>
-var pivot = new WebDataRocks({
-    container: "#wdr-component",
-    toolbar: true,
-    report: {
-        "dataSource": {
-            "dataSourceType": "json",
-            "data": getJSONData()
-        },
-        slice: {
-            rows: [{
-                uniqueName: "Country"
-            }, {
-                uniqueName: "Measures"
-            }],
-            columns: [{
-                uniqueName: "Category"
-            }],
-            measures: [{
-                uniqueName: "Price",
-                format: "currency"
-            }]
-        },
-        formats: [{
-            name: "currency",
-            thousandsSeparator: " ",
-            decimalSeparator: ".",
-            decimalPlaces: 2,
-            maxDecimalPlaces: -1,
-            maxSymbols: 20,
-            currencySymbol: "$",
-            currencySymbolAlign: "left",
-            nullValue: "",
-            infinityValue: "Infinity",
-            divideByZeroValue: "Infinity",
-            textAlign: "right",
-            isPercent: false
-        }]
-    },
-    reportcomplete: function() {
-        pivot.off("reportcomplete");
-        createBarWithDrilldown();
-    }
-});
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-function createBarWithDrilldown() {
-    pivot.highcharts.getData({
-            type: "column",
-            withDrilldown: true
-        },
-        createAndUpdateChart,
-        createAndUpdateChart
-    );
-}
+    <canvas id="myChart"></canvas>
 
-function createAndUpdateChart(data) {
-    data.title.text = "With Drilldown";
-    Highcharts.setOptions({
-        colors: ['#FFE66D', '#4ECDC4', '#1A535C', '#FF6B6B', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
-    });
-    Highcharts.chart('highchartsContainer', data);
-}
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [{% for item in india_data %}"{{ item.Location }}",{% endfor %}],
+                datasets: [{
+                    label: 'Total Inspection Completed Works',
+                    data: [{% for item in india_data %}{{ item.Total_Inspection_Completed_Works }},{% endfor %}],
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                onClick: function (event, elements) {
+                    if (elements.length > 0) {
+                        var clickedLabel = myChart.data.labels[elements[0].index];
+                        drillDown(clickedLabel);
+                    }
+                }
+            }
+        });
 
-function getJSONData() {
-    return [{
-        "Country": "Australia",
-        "Category": "Wood",
-        "Price": 445,
-        "Revenue": 464
-    }, {
-        "Country": "Australia",
-        "Category": "Bikes",
-        "Price": 125,
-        "Revenue": 440
-    }, {
-        "Country": "China",
-        "Category": "Clothing",
-        "Price": 190,
-        "Revenue": 310
-    }, {
-        "Country": "United States",
-        "Category": "Aircraft",
-        "Price": 406,
-        "Revenue": 127
-    }, {
-        "Country": "United States",
-        "Category": "Bikes",
-        "Price": 85,
-        "Revenue": 821
-    }, {
-        "Country": "United Kingdom",
-        "Category": "Cars",
-        "Price": 21,
-        "Revenue": 455
-    }, {
-        "Country": "Canada",
-        "Category": "Clothing",
-        "Price": 666,
-        "Revenue": 685
-    }, {
-        "Country": "Germany",
-        "Category": "Cars",
-        "Price": 563,
-        "Revenue": 742
-    }, {
-        "Country": "United Kingdom",
-        "Category": "Bikes",
-        "Price": 397,
-        "Revenue": 340
-    }, {
-        "Country": "Germany",
-        "Category": "Clothing",
-        "Price": 800,
-        "Revenue": 948
-    }, {
-        "Country": "Germany",
-        "Category": "Cars",
-        "Price": 172,
-        "Revenue": 800
-    }, {
-        "Country": "Canada",
-        "Category": "Aircraft",
-        "Price": 352,
-        "Revenue": 947
-    }, {
-        "Country": "United Kingdom",
-        "Category": "Aircraft",
-        "Price": 540,
-        "Revenue": 328
-    }, {
-        "Country": "United Kingdom",
-        "Category": "Aircraft",
-        "Price": 204,
-        "Revenue": 216
-    }, {
-        "Country": "Germany",
-        "Category": "Clothing",
-        "Price": 292,
-        "Revenue": 644
-    }, {
-        "Country": "Canada",
-        "Category": "Aircraft",
-        "Price": 901,
-        "Revenue": 237
-    }, {
-        "Country": "Canada",
-        "Category": "Wood",
-        "Price": 348
-    }, {
-        "Country": "Canada",
-        "Category": "Clothing",
-        "Price": 725,
-        "Revenue": 335
-    }, {
-        "Country": "Canada",
-        "Category": "Clothing",
-        "Price": 13,
-        "Revenue": 687
-    }, {
-        "Country": "China",
-        "Category": "Wood",
-        "Price": 62,
-        "Revenue": 378
-    }]
-}
-</script>
+        
+    </script>
+
+
+
 {% endblock %}

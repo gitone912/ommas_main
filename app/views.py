@@ -157,20 +157,131 @@ def joint_inspection_cnn(request):
     return render(request, 'cnn.html')
 
 def usfg(request):
-    # Assuming the path to your CSV file is 'sqm/bokaro.csv'
-    path1 = '/Users/pranaymishra/Desktop/sih1429/ommas_main/static/data/unsatisfactory_work_grade/sqm/indiasqm.csv'
-    path2 = '/Users/pranaymishra/Desktop/sih1429/ommas_main/static/data/unsatisfactory_work_grade/sqm/jharkhand.csv'
-    path3 = '/Users/pranaymishra/Desktop/sih1429/ommas_main/static/data/unsatisfactory_work_grade/sqm/bokaro.csv'
-    
-    # Read data from CSV into a pandas DataFrame
-    df = pd.read_csv(path1)
-    
-    # Convert DataFrame to a list of dictionaries
-    data_list = df.to_dict(orient='records')
-    
-    # Pass the data_list to the template
-    return render(request, 'chart.html', {'data_list': data_list})
+    # Read data from CSV file
+    with open('static/data/unsatisfactory_work_grade/sqm/indiasqm.csv', 'r') as file:
+        india_data = list(csv.DictReader(file))
+
+    with open('static/data/unsatisfactory_work_grade/sqm/jharkhand.csv', 'r') as file:
+        jharkhand_data = list(csv.DictReader(file))
+
+    with open('static/data/unsatisfactory_work_grade/sqm/bokaro.csv', 'r') as file:
+        bokaro_data = list(csv.DictReader(file))
+
+    return render(request, 'chart.html', {'india_data': india_data, 'jharkhand_data': jharkhand_data, 'bokaro_data': bokaro_data})
 
 
 def mga(request):
     return render(request,'monitorwise_grading_abstract.html')
+
+
+# views.py
+from django.shortcuts import render
+import pandas as pd
+from django.http import JsonResponse
+
+def chart_data(request):
+    # Load your CSV data into a DataFrame
+    df = pd.read_csv('static/data/monitor/sqm_monitors_jh.csv')
+
+
+    # Example 1: Bar Chart - Total Counts of C, P, M, L Grades
+    total_counts = df.groupby(['MONITOR_NAME', 'ADMIN_IM_YEAR', 'ADMIN_IM_MONTH1']).agg({
+        'C_GRADE_COUNT_T': 'sum',
+        'P_GRADE_COUNT_T': 'sum',
+        'M_GRADE_COUNT_T': 'sum',
+        'L_GRADE_COUNT_T': 'sum',
+    }).reset_index()
+
+    # Example 2: Line Chart - Ongoing and Maint counts
+    ongoing_maint_counts = df.groupby(['MONITOR_NAME', 'ADMIN_IM_YEAR', 'ADMIN_IM_MONTH1']).agg({
+        'ONGOING_S': 'sum',
+        'MAINT_S': 'sum',
+    }).reset_index()
+
+    # Example 3: Doughnut Chart - Total Counts of COMP_S, ONGOING_S, MAINT_S, LSB_S
+    doughnut_counts = df.groupby(['MONITOR_NAME']).agg({
+        'COMP_S': 'sum',
+        'ONGOING_S': 'sum',
+        'MAINT_S': 'sum',
+        'LSB_S': 'sum',
+    }).reset_index()
+
+    # Example 4: Radar Chart - Total Counts of C_GRADE_COUNT_T, P_GRADE_COUNT_T, M_GRADE_COUNT_T, L_GRADE_COUNT_T
+    radar_counts = df.groupby(['MONITOR_NAME']).agg({
+        'C_GRADE_COUNT_T': 'sum',
+        'P_GRADE_COUNT_T': 'sum',
+        'M_GRADE_COUNT_T': 'sum',
+        'L_GRADE_COUNT_T': 'sum',
+    }).reset_index()
+
+    chart_data = {
+        'bar_chart': {
+            'labels': total_counts.apply(lambda x: f"{x['ADMIN_IM_MONTH1']} {x['ADMIN_IM_YEAR']} - {x['MONITOR_NAME']}", axis=1).tolist(),
+            'datasets': [
+                {
+                    'label': 'C Grade',
+                    'data': total_counts['C_GRADE_COUNT_T'].tolist(),
+                    'backgroundColor': 'rgba(75, 192, 192, 0.2)',
+                    'borderColor': 'rgba(75, 192, 192, 1)',
+                    'borderWidth': 1,
+                },
+                # ... Repeat for P, M, L Grades
+            ],
+        },
+        'line_chart': {
+            'labels': ongoing_maint_counts.apply(lambda x: f"{x['ADMIN_IM_MONTH1']} {x['ADMIN_IM_YEAR']} - {x['MONITOR_NAME']}", axis=1).tolist(),
+            'datasets': [
+                {
+                    'label': 'Ongoing',
+                    'data': ongoing_maint_counts['ONGOING_S'].tolist(),
+                    'borderColor': 'rgba(255, 99, 132, 1)',
+                    'borderWidth': 1,
+                    
+                },
+                {
+                    'label': 'Maint',
+                    'data': ongoing_maint_counts['MAINT_S'].tolist(),
+                    'borderColor': 'rgba(255, 255, 0, 1)',
+                    'borderWidth': 1                    
+                },
+            ],
+        },
+        'doughnut_chart': {
+            'labels': doughnut_counts['MONITOR_NAME'].tolist(),
+            'datasets': [
+                {
+                    'data': doughnut_counts['COMP_S'].tolist(),
+                    'backgroundColor': ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)', 'rgba(255, 255, 0, 0.2)'],
+                },
+                # ... Repeat for Ongoing, Maint, LSB
+                {
+                    'data': doughnut_counts['ONGOING_S'].tolist(),
+                    'backgroundColor': ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)', 'rgba(255, 255, 0, 0.2)'],
+                },
+                {
+                    'data': doughnut_counts['MAINT_S'].tolist(),
+                    'backgroundColor': ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)', 'rgba(255, 255, 0, 0.2)'],
+                },
+                {
+                    'data': doughnut_counts['LSB_S'].tolist(),
+                    'backgroundColor': ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)', 'rgba(255, 255, 0, 0.2)'],
+                }
+            ],
+        },
+        'radar_chart': {
+            'labels': radar_counts['MONITOR_NAME'].tolist(),
+            'datasets': [
+                {
+                    'label': 'C Grade',
+                    'data': radar_counts['C_GRADE_COUNT_T'].tolist(),
+                    'backgroundColor': 'rgba(75, 192, 192, 0.2)',
+                    'borderColor': 'rgba(75, 192, 192, 1)',
+                    'borderWidth': 1,
+                    
+                },
+                # ... Repeat for P, M, L Grades
+            ],
+        },
+    }
+
+    return JsonResponse(chart_data)

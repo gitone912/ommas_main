@@ -16,5 +16,6 @@ urlpatterns = [
     path('joint_inspection/',joint_inspection_cnn, name='joint_inspection'),
     path('usfg/',usfg, name='usfg'),
     path('mga/',mga, name='mga'),
+    path('monitor_chart_data/', chart_data, name='chart_data'),
     
 ]

@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bar Chart</title>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-</head>
-<body>
-
+{% extends 'base.html' %}
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <div class="bg-white shadow-lg" id="chart"></div>
 
 <script>
@@ -30,5 +23,4 @@
     chartInstance.render();
 </script>
 
-</body>
-</html>
+{% endblock %}
