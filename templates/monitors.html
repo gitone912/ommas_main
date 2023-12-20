@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Quality Monitor Data</h1>
+
+    <!-- Display the table -->
+   
+
+    <!-- Display charts -->
+    <h2>Charts</h2>
+    <div>
+        <h3>Monthly Counts</h3>
+        {{ chart1_html|safe }}
+    </div>
+
+    <div>
+        <h3>State-wise Distribution</h3>
+        {{ chart2_html|safe }}
+    </div>
+
+{% endblock %}

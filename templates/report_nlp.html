@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div style="max-width: 600px; margin: auto;">
+        <h1>Generate and Download Report</h1>
+        <!-- File Upload Form -->
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div style="margin-bottom: 10px;">
+                <input type="file" name="csv_file" accept=".csv">
+            </div>
+            <div>
+                <button type="submit" style="padding: 10px;">Generate Report</button>
+            </div>
+        </form>
+
+        {% if generated_report %}
+            <!-- Generated Report Section -->
+            <h3>Generated Report:</h3>
+            <p>{{ generated_report|linebreaksbr|safe }}</p>
+
+            <!-- Download Report Button -->
+            <div style="margin-top: 20px;">
+                <a href="#" id="downloadLink" download="generated_report.txt">
+                    <button type="button" onclick="downloadReport()" style="padding: 10px; background-color: #4CAF50; color: white;">Download Report</button>
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- JavaScript for enabling/disabling the download button -->
+    <script>
+        var downloadReport;  // Declare the function globally
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            var downloadLink = document.getElementById('downloadLink');
+    
+            if (downloadLink) {
+                var generatedReport = "{{ generated_report }}";
+    
+                if (generatedReport.trim()) {
+                    downloadLink.style.display = 'inline';
+                } else {
+                    downloadLink.style.display = 'none';
+                }
+            } else {
+                console.error("Download link not found.");
+            }
+        });
+    
+        downloadReport = function() {
+            var textToSave = "{{ generated_report }}";
+            var blob = new Blob([textToSave], { type: 'text/plain' });
+            var link = document.createElement('a');
+    
+            link.download = 'generated_report.txt';
+            link.href = URL.createObjectURL(blob);
+    
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+{% endblock %}

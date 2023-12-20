@@ -9,26 +9,61 @@ from .ai_models.ocr import *
 import csv
 from .ai_models.cnn_model import *
 import pandas as pd
+from django.core.files.storage import FileSystemStorage
 # Create your views here.
 
-def bot(request):
-    if request.method == 'POST':
-        try:
-            user_input = request.POST.get('user_input', '')
-            response = generate_prompt(user_input)
-            print(response)
-            # Save the chat history
-            Chat.objects.create(user_input=user_input, response=response)
-            print("created")
-            chat_history = Chat.objects.all().order_by('-timestamp')
-            return render(request, 'bot.html', {'chat_history': chat_history})
-        except Exception as e:
-            print(e)
-            print("error")
-            return render(request, 'bot.html', {'error': str(e)})
 
+def report_nlp(request):
+    if request.method == 'POST' and request.FILES['csv_file']:
+        # Handle the uploaded CSV file
+        uploaded_file = request.FILES['csv_file']
+        fs = FileSystemStorage()
+        filename = fs.save(uploaded_file.name, uploaded_file)
+        filepath = fs.url(filename)
+
+        # Read the CSV file using pandas
+        data = pd.read_csv(f'/Users/pranaymishra/Desktop/sih1429/ommas_main/{filepath}')
+
+        # Generate a prompt for the report
+        prompt = f"Generate an actionable insightfull report for the uploaded CSV file:\n{data.head()}"
+        
+        # Use GPT-3 to generate a report based on the prompt
+        generated_report = generate_prompt(prompt)
+
+        # Pass the generated report to the template
+        context = {'generated_report': generated_report}
+        return render(request, 'report_nlp.html', context)
+
+    return render(request, 'report_nlp.html')
+
+def bot(request):
+    response = None
+
+    if request.method == 'POST':
+        user_input = request.POST.get('user_input', '')
+        uploaded_file = request.FILES.get('csv_file')
+
+        if not uploaded_file:
+            return render(request, 'bot.html', {'error': 'No CSV file uploaded.'})
+
+        fs = FileSystemStorage()
+        filename = fs.save(uploaded_file.name, uploaded_file)
+        filepath = fs.url(filename)
+
+        # Read the CSV file using pandas
+        data = pd.read_csv(f'/Users/pranaymishra/Desktop/sih1429/ommas_main/{filepath}')
+
+        
+        response = generate_prompt(f'{user_input} : \n {data.head()}')
+        print(response)
+        # Save the chat history
+        Chat.objects.create(user_input=user_input, response=response)
+        print("created")
+    
     chat_history = Chat.objects.all().order_by('-timestamp')
-    return render(request, 'bot.html', {'chat_history': chat_history})
+    return render(request, 'bot.html', {'chat_history': chat_history, 'response': response})
+
+
 
 
 def login_view(request):
@@ -174,114 +209,32 @@ def mga(request):
     return render(request,'monitorwise_grading_abstract.html')
 
 
-# views.py
-from django.shortcuts import render
 import pandas as pd
-from django.http import JsonResponse
+import plotly.express as px
 
-def chart_data(request):
-    # Load your CSV data into a DataFrame
-    df = pd.read_csv('static/data/monitor/sqm_monitors_jh.csv')
+def quality_monitor_data(request):
+    csv_file_path = 'static/data/monitor/nqm_monitor.csv'  
 
+    # Read CSV file into a pandas DataFrame
+    df = pd.read_csv(csv_file_path)
 
-    # Example 1: Bar Chart - Total Counts of C, P, M, L Grades
-    total_counts = df.groupby(['MONITOR_NAME', 'ADMIN_IM_YEAR', 'ADMIN_IM_MONTH1']).agg({
-        'C_GRADE_COUNT_T': 'sum',
-        'P_GRADE_COUNT_T': 'sum',
-        'M_GRADE_COUNT_T': 'sum',
-        'L_GRADE_COUNT_T': 'sum',
-    }).reset_index()
+    # Prepare data for the table
+    table_data = df.to_html(classes='table table-striped table-bordered', index=False)
 
-    # Example 2: Line Chart - Ongoing and Maint counts
-    ongoing_maint_counts = df.groupby(['MONITOR_NAME', 'ADMIN_IM_YEAR', 'ADMIN_IM_MONTH1']).agg({
-        'ONGOING_S': 'sum',
-        'MAINT_S': 'sum',
-    }).reset_index()
+    # Create charts for specific columns
+    fig1 = px.bar(df, x='ADMIN_IM_MONTH1', y=['COMP_S', 'ONGOING_S', 'MAINT_S', 'LSB_S'], title='Monthly Counts')
+    fig2 = px.pie(df, names='STATE_NAME', title='State-wise Distribution')
 
-    # Example 3: Doughnut Chart - Total Counts of COMP_S, ONGOING_S, MAINT_S, LSB_S
-    doughnut_counts = df.groupby(['MONITOR_NAME']).agg({
-        'COMP_S': 'sum',
-        'ONGOING_S': 'sum',
-        'MAINT_S': 'sum',
-        'LSB_S': 'sum',
-    }).reset_index()
+    # Convert charts to HTML
+    chart1_html = fig1.to_html(full_html=False)
+    chart2_html = fig2.to_html(full_html=False)
 
-    # Example 4: Radar Chart - Total Counts of C_GRADE_COUNT_T, P_GRADE_COUNT_T, M_GRADE_COUNT_T, L_GRADE_COUNT_T
-    radar_counts = df.groupby(['MONITOR_NAME']).agg({
-        'C_GRADE_COUNT_T': 'sum',
-        'P_GRADE_COUNT_T': 'sum',
-        'M_GRADE_COUNT_T': 'sum',
-        'L_GRADE_COUNT_T': 'sum',
-    }).reset_index()
-
-    chart_data = {
-        'bar_chart': {
-            'labels': total_counts.apply(lambda x: f"{x['ADMIN_IM_MONTH1']} {x['ADMIN_IM_YEAR']} - {x['MONITOR_NAME']}", axis=1).tolist(),
-            'datasets': [
-                {
-                    'label': 'C Grade',
-                    'data': total_counts['C_GRADE_COUNT_T'].tolist(),
-                    'backgroundColor': 'rgba(75, 192, 192, 0.2)',
-                    'borderColor': 'rgba(75, 192, 192, 1)',
-                    'borderWidth': 1,
-                },
-                # ... Repeat for P, M, L Grades
-            ],
-        },
-        'line_chart': {
-            'labels': ongoing_maint_counts.apply(lambda x: f"{x['ADMIN_IM_MONTH1']} {x['ADMIN_IM_YEAR']} - {x['MONITOR_NAME']}", axis=1).tolist(),
-            'datasets': [
-                {
-                    'label': 'Ongoing',
-                    'data': ongoing_maint_counts['ONGOING_S'].tolist(),
-                    'borderColor': 'rgba(255, 99, 132, 1)',
-                    'borderWidth': 1,
-                    
-                },
-                {
-                    'label': 'Maint',
-                    'data': ongoing_maint_counts['MAINT_S'].tolist(),
-                    'borderColor': 'rgba(255, 255, 0, 1)',
-                    'borderWidth': 1                    
-                },
-            ],
-        },
-        'doughnut_chart': {
-            'labels': doughnut_counts['MONITOR_NAME'].tolist(),
-            'datasets': [
-                {
-                    'data': doughnut_counts['COMP_S'].tolist(),
-                    'backgroundColor': ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)', 'rgba(255, 255, 0, 0.2)'],
-                },
-                # ... Repeat for Ongoing, Maint, LSB
-                {
-                    'data': doughnut_counts['ONGOING_S'].tolist(),
-                    'backgroundColor': ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)', 'rgba(255, 255, 0, 0.2)'],
-                },
-                {
-                    'data': doughnut_counts['MAINT_S'].tolist(),
-                    'backgroundColor': ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)', 'rgba(255, 255, 0, 0.2)'],
-                },
-                {
-                    'data': doughnut_counts['LSB_S'].tolist(),
-                    'backgroundColor': ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)', 'rgba(255, 255, 0, 0.2)'],
-                }
-            ],
-        },
-        'radar_chart': {
-            'labels': radar_counts['MONITOR_NAME'].tolist(),
-            'datasets': [
-                {
-                    'label': 'C Grade',
-                    'data': radar_counts['C_GRADE_COUNT_T'].tolist(),
-                    'backgroundColor': 'rgba(75, 192, 192, 0.2)',
-                    'borderColor': 'rgba(75, 192, 192, 1)',
-                    'borderWidth': 1,
-                    
-                },
-                # ... Repeat for P, M, L Grades
-            ],
-        },
+    # Pass data to the HTML template
+    context = {
+        'table_data': table_data,
+        'chart1_html': chart1_html,
+        'chart2_html': chart2_html,
     }
 
-    return JsonResponse(chart_data)
+
+    return render(request, 'monitors.html', context)

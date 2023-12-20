@@ -1,17 +1,23 @@
 {% extends 'base.html' %}
 {% block content %}
-
-
     <div class="max-w-md w-full bg-white p-8 rounded shadow-md">
         <h1 class="text-2xl font-bold mb-4">Chatbot</h1>
-        <form method="post" action="{% url 'bot' %}" class="mb-4">
+        <form method="post" action="{% url 'bot' %}" class="mb-4" enctype="multipart/form-data">
             {% csrf_token %}
             <label for="user_input" class="block text-sm font-medium text-gray-600 mb-1">User Input:</label>
             <input type="text" name="user_input" id="user_input" class="w-full border p-2 rounded focus:outline-none focus:border-blue-500">
+            <label for="csv_file" class="block text-sm font-medium text-gray-600 mb-1">CSV File:</label>
+            <input type="file" name="csv_file" id="csv_file" accept=".csv" class="mb-2">
             <button type="submit" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
                 Submit
             </button>
         </form>
+
+        {% if error %}
+            <div class="bg-red-100 text-red-700 p-4 rounded mt-4">
+                <p class="text-sm"><strong>Error:</strong> {{ error }}</p>
+            </div>
+        {% endif %}
 
         {% if response %}
             <div class="bg-gray-100 p-4 rounded mt-4">
@@ -37,5 +43,4 @@
             </div>
         {% endif %}
     </div>
-
 {% endblock %}
