@@ -10,6 +10,7 @@ import csv
 from .ai_models.cnn_model import *
 import pandas as pd
 from django.core.files.storage import FileSystemStorage
+from sklearn.metrics import accuracy_score
 # Create your views here.
 
 
@@ -212,7 +213,7 @@ def mga(request):
 import pandas as pd
 import plotly.express as px
 
-def quality_monitor_data(request):
+def monitors(request):
     csv_file_path = 'static/data/monitor/nqm_monitor.csv'  
 
     # Read CSV file into a pandas DataFrame
@@ -240,13 +241,13 @@ def quality_monitor_data(request):
                 x=best_monitor['MONITOR_NAME'], y=best_monitor['COMP_S'],
                 xref="x", yref="y",
                 text=f"Best Monitor: {best_monitor['MONITOR_NAME']} ({best_monitor['COMP_S']} tasks)",
-                showarrow=True, arrowhead=7, ax=0, ay=-40
+                showarrow=True, arrowhead=7, ax=4, ay=-40
             ),
             dict(
                 x=worst_monitor['MONITOR_NAME'], y=worst_monitor['COMP_S'],
                 xref="x", yref="y",
                 text=f"Worst Monitor: {worst_monitor['MONITOR_NAME']} ({worst_monitor['COMP_S']} tasks)",
-                showarrow=True, arrowhead=7, ax=0, ay=-40
+                showarrow=True, arrowhead=7, ax=4, ay=-40
             )
         ]
     )
@@ -265,3 +266,140 @@ def quality_monitor_data(request):
     }
 
     return render(request, 'monitors.html', context)
+
+def monitors_sqm(request):
+    csv_file_path = 'static/data/monitor/sqm_monitors_jh.csv'  
+
+    # Read CSV file into a pandas DataFrame
+    df = pd.read_csv(csv_file_path)
+
+    # Prepare data for the table
+    table_data = df.to_html(classes='table table-striped table-bordered', index=False)
+
+    # Create charts for specific columns
+    fig1 = px.bar(df, x='ADMIN_IM_MONTH1', y=['COMP_S', 'ONGOING_S', 'MAINT_S', 'LSB_S'], title='Monthly Counts')
+    fig2 = px.pie(df, names='DISTRICT_NAME', title='District-wise Distribution')
+
+    # Compare monitors based on the total number of completed tasks
+    best_monitor = df.loc[df['COMP_S'].idxmax()]
+    worst_monitor = df.loc[df['COMP_S'].idxmin()]
+
+    fig3 = px.bar(
+        df, x='MONITOR_NAME', y='COMP_S', 
+        title='Comparison of Monitors based on Completed Tasks',
+        labels={'COMP_S': 'Completed Tasks'},
+    )
+    fig3.update_layout(
+        annotations=[
+            dict(
+                x=best_monitor['MONITOR_NAME'], y=best_monitor['COMP_S'],
+                xref="x", yref="y",
+                text=f"Best Monitor: {best_monitor['MONITOR_NAME']} ({best_monitor['COMP_S']} tasks)",
+                showarrow=True, arrowhead=7, ax=4, ay=-40
+            ),
+            dict(
+                x=worst_monitor['MONITOR_NAME'], y=worst_monitor['COMP_S'],
+                xref="x", yref="y",
+                text=f"Worst Monitor: {worst_monitor['MONITOR_NAME']} ({worst_monitor['COMP_S']} tasks)",
+                showarrow=True, arrowhead=7, ax=4, ay=-40
+            )
+        ]
+    )
+
+    # Convert charts to HTML
+    chart1_html = fig1.to_html(full_html=False)
+    chart2_html = fig2.to_html(full_html=False)
+    chart3_html = fig3.to_html(full_html=False)
+
+    # Pass data to the HTML template
+    context = {
+        'table_data': table_data,
+        'chart1_html': chart1_html,
+        'chart2_html': chart2_html,
+        'chart3_html': chart3_html,
+    }
+
+    return render(request, 'monitors_sqm.html', context)
+
+
+
+# yourappname/views.py
+from django.shortcuts import render
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import IsolationForest
+from sklearn.impute import SimpleImputer
+import plotly.express as px
+
+def visualization_view(request):
+    # Load the data
+    df = pd.read_csv("static/data/unsatisfactory_work_grade/sqm/indiasqm.csv")
+
+    # Convert 'Total_Inspection' to numeric
+    if pd.api.types.is_numeric_dtype(df['Total_Inspection_Completed_Works']):
+        df['Total_Inspection_Completed_Works'] = df['Total_Inspection_Completed_Works'].astype(float)
+    else:
+        df['Total_Inspection_Completed_Works'] = df['Total_Inspection_Completed_Works'].str.replace(',', '').astype(float)
+
+    # List of columns to convert to numeric after removing '%'
+    percentage_columns = ['Completed_Works_U%', 'Ongoing_Works', 'Ongoing_U%', 'Maintenance_Works', 'Maintenance_U%', 'Bridge_Works', 'Bridge_U%']
+
+    # Loop through the columns and convert to numeric after removing '%'
+    for col in percentage_columns:
+        # Check if the column is already numeric
+        if not pd.api.types.is_numeric_dtype(df[col]):
+            df[col] = df[col].str.rstrip('%').astype('float') / 100.0
+    df['Total_Inspection'] = pd.to_numeric(df['Total_Inspection'].str.replace(',', ''), errors='coerce')
+
+    # Check and convert 'Total_Inspection_Completed_Works'
+    if pd.api.types.is_numeric_dtype(df['Total_Inspection_Completed_Works']):
+        df['Total_Inspection_Completed_Works'] = df['Total_Inspection_Completed_Works'].astype(float)
+    else:
+        df['Total_Inspection_Completed_Works'] = df['Total_Inspection_Completed_Works'].str.replace(',', '').astype(float)
+
+    # List of columns to convert to numeric after removing '%'
+    percentage_columns = ['Completed_Works_U%', 'Ongoing_Works', 'Ongoing_U%', 'Maintenance_Works', 'Maintenance_U%', 'Bridge_Works', 'Bridge_U%']
+
+    # Loop through the columns and convert to numeric after removing '%'
+    for col in percentage_columns:
+        # Check if the column is already numeric
+        if not pd.api.types.is_numeric_dtype(df[col]):
+            df[col] = df[col].str.rstrip('%').astype('float') / 100.0
+
+    # Identify numeric columns
+    numeric_columns = df.select_dtypes(include=['number']).columns
+
+    # Impute missing values for each numeric column separately
+    imputer = SimpleImputer(strategy='mean')
+    for col in numeric_columns:
+        df[col] = imputer.fit_transform(df[[col]])
+
+    # Isolation Forest
+    features = df[['Total_Inspection_Completed_Works', 'Completed_Works_U%', 'Ongoing_Works', 'Ongoing_U%',
+                        'Maintenance_Works', 'Maintenance_U%', 'Bridge_Works', 'Bridge_U%', 'Total_Inspection']]
+
+    scaler = StandardScaler()
+    features_scaled = scaler.fit_transform(features)
+
+    iso_forest = IsolationForest(random_state=42, contamination=0.05)
+    df['outlier'] = iso_forest.fit_predict(features_scaled)
+
+    # Accuracy Score
+    true_labels = [1 if x == 1 else -1 for x in df['outlier']]
+    predicted_labels = iso_forest.predict(features_scaled)
+    accuracy = accuracy_score(true_labels, predicted_labels)
+
+    print(f'Isolation Forest Accuracy: {accuracy}')
+
+    # Visualization using Plotly
+    fig = px.scatter_3d(df, x='Total_Inspection_Completed_Works', y='Ongoing_Works', z='Maintenance_Works',
+                        color='outlier', title='Isolation Forest Outliers',
+                        labels={'Total_Inspection_Completed_Works': 'Completed Works',
+                                'Ongoing_Works': 'Ongoing Works',
+                                'Maintenance_Works': 'Maintenance Works'})
+
+    fig.update_layout(scene=dict(aspectmode="cube"))
+    fig.show()
+
+    # Render the visualization in the HTML template
+    return render(request, 'visualization.html', {'fig': fig})

@@ -17,6 +17,8 @@ urlpatterns = [
     path('usfg/',usfg, name='usfg'),
     path('mga/',mga, name='mga'),
     path('report_nlp/',report_nlp, name='nlp_report'),
-    path('monitors/',quality_monitor_data,name='monitors')
+    path('monitors/',monitors,name='monitors'),
+    path('monitors_sqm',monitors_sqm,name='monitors_sqm'),
+    path('discrepancies/', visualization_view, name='visualization'),
     
 ]
