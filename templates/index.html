@@ -166,10 +166,11 @@
                                 </div>
                             </div>
                             <div class="col-span-12 mt-5">
-                                <h3>Regraded Grading Abstract for the year 2023 in every state and Tamil Nadu</h3>
+                                <h3>Regraded Grading Abstract for the year 2021-23</h3>
                                 <div class="grid gap-2 grid-cols-1 lg:grid-cols-2">
                             
                                     <div class="bg-white shadow-lg" id="visualization"></div>
+                                     
                                     <div class="bg-white shadow-lg p-4" id="graph-container"></div>
                                     
                             
@@ -716,49 +717,46 @@
 
 definitionVisualization.donut.show();
     </script>
+
+    
+    
     <script>
         google.load('visualization', '1', {'packages': ['geochart']});
 google.setOnLoadCallback(drawVisualization);
 
 function drawVisualization() {
   var data = google.visualization.arrayToDataTable([
-        ['State Code', 'State', 'Temperature'],     
-          [ 'IN-UP','Uttar Pradesh', 33],
-    ['IN-MH','Maharashtra', 32],
-    ['IN-BR','Bihar', 31],
-    ['IN-WB','West Bengal', 32],
-    ['IN-MP','Madhya Pradesh', 30],
-    ['IN-TN','Tamil Nadu', 33],
-    ['IN-RJ','Rajasthan', 33],
-    ['IN-KA','Karnataka', 29],
-    ['IN-GJ','Gujarat', 34],
-    ['IN-AP','Andhra Pradesh', 32],
-    ['IN-OR','Orissa', 33],
-    ['IN-TG','Telangana', 33],
-    ['IN-KL','Kerala', 31],
-    ['IN-JH','Jharkhand', 29],
-    ['IN-AS','Assam', 28],
-    ['IN-PB','Punjab', 30],
-    ['IN-CT','Chhattisgarh', 33],
-    ['IN-HR','Haryana', 30],
-    ['IN-JK','Jammu and Kashmir', 20],
-    ['IN-UT','Uttarakhand', 28],
-    ['IN-HP','Himachal Pradesh', 17],
-    ['IN-TR','Tripura', 31],
-    ['IN-ML','Meghalaya', 21],
-    ['IN-MN','Manipur', 22],
-    ['IN-NL','Nagaland', 22],
-    ['IN-GA','Goa', 32],
-    ['IN-AR', 'Arunachal Pradesh', 33],
-    ['IN-MZ','Mizoram', 23],
-    ['IN-SK','Sikkim', 24],
-    ['IN-DL','Delhi', 31],
-    ['IN-PY','Puducherry', 33],
-    ['IN-CH','Chandigarh', 30],
-    ['IN-AN','Andaman and Nicobar Islands', 30],
-    ['IN-DN','Dadra and Nagar Haveli', 30],
-    ['IN-DD','Daman and Diu', 29],
-    ['IN-LD','Lakshadweep', 31]
+        ['State Code', 'State', 'Total Inspection'],     
+          [ 'IN-UP','Uttar Pradesh', 1818],
+    ['IN-MH','Maharashtra', 651],
+    ['IN-BR','Bihar', 1751],
+    ['IN-WB','West Bengal', 686],
+    ['IN-MP','Madhya Pradesh', 1846],
+    ['IN-TN','Tamil Nadu', 1003],
+    ['IN-RJ','Rajasthan', 915],
+    ['IN-KA','Karnataka', 819],
+    ['IN-GJ','Gujarat', 309],
+    ['IN-AP','Andhra Pradesh', 630],
+    ['IN-OR','Odisha', 1834],
+    ['IN-TG','Telangana', 733],
+    ['IN-KL','Kerala', 225],
+    ['IN-JH','Jharkhand', 1136],
+    ['IN-AS','Assam', 1626],
+    ['IN-PB','Punjab', 460],
+    ['IN-CT','Chhattisgarh', 1231],
+    ['IN-HR','Haryana', 378],
+    ['IN-JK','Jammu and Kashmir', 510],
+    ['IN-UT','Uttarakhand', 700],
+    ['IN-HP','Himachal Pradesh', 586],
+    ['IN-TR','Tripura', 304],
+    ['IN-ML','Meghalaya', 528],
+    ['IN-MN','Manipur', 273],
+    ['IN-NL','Nagaland', 125],
+    ['IN-AR', 'Arunachal Pradesh', 630],
+    ['IN-MZ','Mizoram', 165],
+    ['IN-SK','Sikkim', 300],
+    ['IN-PY','Puducherry', 12],
+    ['IN-AN','Andaman and Nicobar', 48]
   ]);
 
       var opts = {
@@ -769,7 +767,8 @@ function drawVisualization() {
         resolution: 'provinces',
         defaultColor: '#f5f5f5',
         width: 640, 
-        height: 480
+        height: 480,
+         
       };
       var geochart = new google.visualization.GeoChart(
           document.getElementById('visualization'));
