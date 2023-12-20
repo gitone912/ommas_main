@@ -1,3 +1,4 @@
+import os
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -13,6 +14,7 @@ from django.core.files.storage import FileSystemStorage
 from sklearn.metrics import accuracy_score
 import plotly.offline as opy
 import plotly.figure_factory as ff
+from .preprocess import *
 
 # Create your views here.
 
@@ -502,3 +504,34 @@ def disrepancies(request):
         context = {'generated_report': generated_report,'table_html':table_html}
         return render(request, 'discrepancies.html', context)
     return render(request,'discrepancies.html')
+
+from django.utils.encoding import smart_str
+def preprocessing_pipeline(request):
+    if request.method == 'POST' and request.FILES['csv_file']:
+        # Handle the uploaded CSV file
+        uploaded_file = request.FILES['csv_file']
+        fs = FileSystemStorage()
+        filename = fs.save(uploaded_file.name, uploaded_file)
+        filepath = fs.url(filename)
+        input_file_path = f'/Users/pranaymishra/Desktop/sih1429/ommas_main/{filepath}'
+        output_file_path = '/Users/pranaymishra/Desktop/sih1429/ommas_main/static/data/preprocessed_data/preprocessed_data.csv'
+        preprocess_csv(input_file_path, output_file_path)
+        
+        # Provide the user with a download link
+        download_link = output_file_path
+        context = {'success': 'File Preprocessed successfully.', 'download_link': download_link}
+        
+        return render(request, 'upload.html', context)
+    return render(request, 'upload.html')
+
+def download_preprocessed_data(request):
+    file_path = request.GET.get('file_path', '')
+
+    # Check if the file exists
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as file:
+            response = HttpResponse(file.read(), content_type='application/csv')
+            response['Content-Disposition'] = f'attachment; filename={smart_str(os.path.basename(file_path))}'
+            return response
+    else:
+        return HttpResponse("File not found", status=404)

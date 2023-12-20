@@ -20,5 +20,7 @@ urlpatterns = [
     path('monitors/',monitors,name='monitors'),
     path('monitors_sqm',monitors_sqm,name='monitors_sqm'),
     path('discrepancies/', disrepancies, name='disc'),
+    path('pipeline/',preprocessing_pipeline,name='pipeline'),
+    path('download/', download_preprocessed_data, name='download_preprocessed_data'),
     
 ]
