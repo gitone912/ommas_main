@@ -323,9 +323,6 @@ def monitors_sqm(request):
 
 
 
-# yourappname/views.py
-from django.shortcuts import render
-import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import IsolationForest
 from sklearn.impute import SimpleImputer
@@ -403,3 +400,7 @@ def visualization_view(request):
 
     # Render the visualization in the HTML template
     return render(request, 'visualization.html', {'fig': fig})
+
+
+def disrepancies(request):
+    return render(request,'discrepancies.html')

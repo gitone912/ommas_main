@@ -1,62 +1,4 @@
-<script>
-    var chart = document.querySelector('#chartline')
-    var options = {
-        series: [{
-            
-            type: 'area',
-            data: [ 4,2.5,7,5,6]
-        }, {
-            name: '',
-            type: 'line',
-            data: []
-        }],
-        chart: {
-            height: 350,
-            type: 'line',
-            zoom: {
-                enabled: false
-            }
-        },
-        stroke: {
-            curve: 'smooth'
-        },
-        fill: {
-            type: 'solid',
-            opacity: [0.35, 1],
-        },
-        labels: ['qm', 'sqm ', 'nqm', 'qcr','t-sheets'],
-        markers: {
-            size: 0
-        },
-        yaxis: [{
-                title: {
-                    text: 'Series A',
-                },
-            },
-            {
-                opposite: true,
-                title: {
-                    text: 'Series B',
-                },
-            },
-        ],
-        tooltip: {
-            shared: true,
-            intersect: false,
-            y: {
-                formatter: function(y) {
-                    if (typeof y !== "undefined") {
-                        return y.toFixed(0) + " points";
-                    }
-                    return y;
-                }
-            }
-        }
-    };
-    var chart = new ApexCharts(chart, options);
-    chart.render();
-</script>
-<script>
+ <script>
     var chart = document.querySelector('#chartpie')
     var options = {
         name: 'Regraded Grading Abstract for the year 2023',
@@ -90,3 +32,43 @@
     var chart = new ApexCharts(chart, options);
     chart.render();
 </script>
+<script>
+    var chartElement = document.querySelector('#chartline'); // Adjust the selector if needed
+
+    var options = {
+        name: 'Regraded Grading Abstract for the year 2023',
+        series: [12, 11, 12, 12, 4, 5, 8, 7, 7, 18, 11, 4, 19, 7, 6, 17, 9, 7, 9, 2],
+        chart: {
+            height: 350,
+            type: 'pie',
+            title:'Regraded Grading Abstract for the year 2023 in Tamil Nadu'
+        },
+        plotOptions: {
+            radialBar: {
+                dataLabels: {
+                    name: {
+                        fontSize: '22px',
+                    },
+                    value: {
+                        fontSize: '16px',
+                    },
+                    total: {
+                        show: true,
+                        label: 'Session',
+                        
+                        formatter: function (w) {
+                            // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
+                            return "";
+                        }
+                    }
+                }
+            }
+        },
+        labels: ['Cuddalore', 'Dharmapuri', 'Erode', 'Krishnagiri', 'Nagapattinam', 'Namakkal', 'Perambalur', 'Pudukkottai', 'Ramanathapuram', 'Salem', 'Sivagangai', 'Thanjavur', 'Tiruchirappalli', 'Tirunelveli', 'Tiruvallur', 'Tiruvannamalai', 'Tiruvarur', 'Tuticorin', 'Vellore', 'Virudhunagar'],
+    };
+
+    var chart = new ApexCharts(chartElement, options);
+    chart.render();
+</script>
+
+ 
