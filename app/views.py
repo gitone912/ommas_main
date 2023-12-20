@@ -225,16 +225,43 @@ def quality_monitor_data(request):
     fig1 = px.bar(df, x='ADMIN_IM_MONTH1', y=['COMP_S', 'ONGOING_S', 'MAINT_S', 'LSB_S'], title='Monthly Counts')
     fig2 = px.pie(df, names='STATE_NAME', title='State-wise Distribution')
 
+    # Compare monitors based on the total number of completed tasks
+    best_monitor = df.loc[df['COMP_S'].idxmax()]
+    worst_monitor = df.loc[df['COMP_S'].idxmin()]
+
+    fig3 = px.bar(
+        df, x='MONITOR_NAME', y='COMP_S', 
+        title='Comparison of Monitors based on Completed Tasks',
+        labels={'COMP_S': 'Completed Tasks'},
+    )
+    fig3.update_layout(
+        annotations=[
+            dict(
+                x=best_monitor['MONITOR_NAME'], y=best_monitor['COMP_S'],
+                xref="x", yref="y",
+                text=f"Best Monitor: {best_monitor['MONITOR_NAME']} ({best_monitor['COMP_S']} tasks)",
+                showarrow=True, arrowhead=7, ax=0, ay=-40
+            ),
+            dict(
+                x=worst_monitor['MONITOR_NAME'], y=worst_monitor['COMP_S'],
+                xref="x", yref="y",
+                text=f"Worst Monitor: {worst_monitor['MONITOR_NAME']} ({worst_monitor['COMP_S']} tasks)",
+                showarrow=True, arrowhead=7, ax=0, ay=-40
+            )
+        ]
+    )
+
     # Convert charts to HTML
     chart1_html = fig1.to_html(full_html=False)
     chart2_html = fig2.to_html(full_html=False)
+    chart3_html = fig3.to_html(full_html=False)
 
     # Pass data to the HTML template
     context = {
         'table_data': table_data,
         'chart1_html': chart1_html,
         'chart2_html': chart2_html,
+        'chart3_html': chart3_html,
     }
-
 
     return render(request, 'monitors.html', context)

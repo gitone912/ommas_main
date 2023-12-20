@@ -1,70 +1,33 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    <style>
-       
-
-        .upload-box {
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            width: 400px;
-            padding: 20px;
-            text-align: center;
-        }
-
-        h2 {
-            color: #333;
-        }
-
-        form {
-            margin-top: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555;
-        }
-
-        input[type="file"] {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            box-sizing: border-box;
-        }
-
-        button {
-            background-color: #3498db;
-            color: #fff;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        button:hover {
-            background-color: #2980b9;
-        }
-
-        .prediction-container {
-            margin-top: 20px;
-            color: #555;
-        }
-    </style>
 
 
-    <div class="upload-box">
-        <h2>Upload an Image</h2>
-        <form method="post" enctype="multipart/form-data">
-            <label for="image">Select an image:</label>
-            <input type="file" id="image" name="image" accept="image/*" required>
-            <button type="submit">Submit</button>
+    <div class="max-w-md w-full bg-white p-8 rounded-md shadow-md">
+        <h1 class="text-2xl font-bold mb-6">Joint Inspection CNN</h1>
+
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <label for="image" class="block text-sm font-medium text-gray-600">Upload Image</label>
+            <input type="file" name="image" id="image" accept="image/*"
+                class="mt-1 p-2 border border-gray-300 rounded-md w-full focus:outline-none focus:ring focus:border-blue-300">
+
+            <button type="submit"
+                class="mt-4 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:border-blue-300">
+                Submit
+            </button>
         </form>
 
-         
+        {% if prediction %}
+        <div class="mt-6">
+            <h2 class="text-lg font-semibold mb-2">Prediction Result:</h2>
+            <p class="text-gray-700">{{ prediction }}</p>
+        </div>
+        {% endif %}
+
     </div>
+
+
 
 {% endblock %}

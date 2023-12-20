@@ -51,9 +51,9 @@ def predict_image(img_path):
     # Print the prediction (1 if tile is present, 0 otherwise)
     print(predictions)
     if predictions[0][0] > 0.5:
-        return 'Tile detected'
+        return 'DATA SATISFACTORY ( TILE DETECTED )'
     else:
-        return 'No tile detected'
+        return 'DATA UNSATISFACTORY ( NEEDS IMPROVEMENT )'
 
 
 # train_and_save_model('/Users/pranaymishra/Desktop/OMMAS_Modeling/images', 'tile_detection_model.h5')
