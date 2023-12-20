@@ -22,16 +22,13 @@ def report_nlp(request):
         filename = fs.save(uploaded_file.name, uploaded_file)
         filepath = fs.url(filename)
 
-        # Read the CSV file using pandas
+
         data = pd.read_csv(f'/Users/pranaymishra/Desktop/sih1429/ommas_main/{filepath}')
 
-        # Generate a prompt for the report
         prompt = f"Generate an actionable insightfull report for the uploaded CSV file:\n{data.head()}"
         
-        # Use GPT-3 to generate a report based on the prompt
         generated_report = generate_prompt(prompt)
 
-        # Pass the generated report to the template
         context = {'generated_report': generated_report}
         return render(request, 'report_nlp.html', context)
 
@@ -223,30 +220,31 @@ def monitors(request):
     table_data = df.to_html(classes='table table-striped table-bordered', index=False)
 
     # Create charts for specific columns
-    fig1 = px.bar(df, x='ADMIN_IM_MONTH1', y=['COMP_S', 'ONGOING_S', 'MAINT_S', 'LSB_S'], title='Monthly Counts')
+    fig1 = px.bar(df, x='MONTH', y=['COMPLETED', 'ONGOING', 'MAINTENANCE', 'BRIDGE'], title='Monthly Counts')
+
     fig2 = px.pie(df, names='STATE_NAME', title='State-wise Distribution')
 
     # Compare monitors based on the total number of completed tasks
-    best_monitor = df.loc[df['COMP_S'].idxmax()]
-    worst_monitor = df.loc[df['COMP_S'].idxmin()]
+    best_monitor = df.loc[df['COMPLETED'].idxmax()]
+    worst_monitor = df.loc[df['COMPLETED'].idxmin()]
 
     fig3 = px.bar(
-        df, x='MONITOR_NAME', y='COMP_S', 
+        df, x='MONITOR_NAME', y='COMPLETED', 
         title='Comparison of Monitors based on Completed Tasks',
-        labels={'COMP_S': 'Completed Tasks'},
+        labels={'COMPLETED': 'Completed Tasks'},
     )
     fig3.update_layout(
         annotations=[
             dict(
-                x=best_monitor['MONITOR_NAME'], y=best_monitor['COMP_S'],
+                x=best_monitor['MONITOR_NAME'], y=best_monitor['COMPLETED'],
                 xref="x", yref="y",
-                text=f"Best Monitor: {best_monitor['MONITOR_NAME']} ({best_monitor['COMP_S']} tasks)",
+                text=f"Best Monitor: {best_monitor['MONITOR_NAME']} ({best_monitor['COMPLETED']} tasks)",
                 showarrow=True, arrowhead=7, ax=4, ay=-40
             ),
             dict(
-                x=worst_monitor['MONITOR_NAME'], y=worst_monitor['COMP_S'],
+                x=worst_monitor['MONITOR_NAME'], y=worst_monitor['COMPLETED'],
                 xref="x", yref="y",
-                text=f"Worst Monitor: {worst_monitor['MONITOR_NAME']} ({worst_monitor['COMP_S']} tasks)",
+                text=f"Worst Monitor: {worst_monitor['MONITOR_NAME']} ({worst_monitor['COMPLETED']} tasks)",
                 showarrow=True, arrowhead=7, ax=4, ay=-40
             )
         ]
@@ -277,7 +275,7 @@ def monitors_sqm(request):
     table_data = df.to_html(classes='table table-striped table-bordered', index=False)
 
     # Create charts for specific columns
-    fig1 = px.bar(df, x='ADMIN_IM_MONTH1', y=['COMP_S', 'ONGOING_S', 'MAINT_S', 'LSB_S'], title='Monthly Counts')
+    fig1 = px.bar(df, x='MONTH', y=['COMP_S', 'ONGOING_S', 'MAINT_S', 'LSB_S'], title='Monthly Counts')
     fig2 = px.pie(df, names='DISTRICT_NAME', title='District-wise Distribution')
 
     # Compare monitors based on the total number of completed tasks
