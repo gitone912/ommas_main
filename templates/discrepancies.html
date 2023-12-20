@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         
@@ -51,6 +52,22 @@
                 </div>
                 
             </form>
+            <br>
+    
+            {% if generated_report %}
+                <!-- Generated Report Section -->
+                <h3>Generated Report:</h3>
+                <p>{{ generated_report|linebreaksbr|safe }}</p>
+    
+                
+            {% endif %}
+
+            <br>
+            
+
+    <!-- Display the Plotly table -->
+    <div>{{ table_html|safe }}</div>
+        </div>
         </div>
     </div>
 

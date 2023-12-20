@@ -11,6 +11,9 @@ from .ai_models.cnn_model import *
 import pandas as pd
 from django.core.files.storage import FileSystemStorage
 from sklearn.metrics import accuracy_score
+import plotly.offline as opy
+import plotly.figure_factory as ff
+
 # Create your views here.
 
 
@@ -219,15 +222,17 @@ def monitors(request):
     # Prepare data for the table
     table_data = df.to_html(classes='table table-striped table-bordered', index=False)
 
-    # Create charts for specific columns
+    # Create a bar chart showing monthly counts
     fig1 = px.bar(df, x='MONTH', y=['COMPLETED', 'ONGOING', 'MAINTENANCE', 'BRIDGE'], title='Monthly Counts')
 
+    # Create a pie chart showing state-wise distribution
     fig2 = px.pie(df, names='STATE_NAME', title='State-wise Distribution')
 
     # Compare monitors based on the total number of completed tasks
     best_monitor = df.loc[df['COMPLETED'].idxmax()]
     worst_monitor = df.loc[df['COMPLETED'].idxmin()]
 
+    # Create a bar chart comparing monitors based on completed tasks
     fig3 = px.bar(
         df, x='MONITOR_NAME', y='COMPLETED', 
         title='Comparison of Monitors based on Completed Tasks',
@@ -255,15 +260,19 @@ def monitors(request):
     chart2_html = fig2.to_html(full_html=False)
     chart3_html = fig3.to_html(full_html=False)
 
-    # Pass data to the HTML template
+    # Pass data to the HTML template along with insights
     context = {
         'table_data': table_data,
         'chart1_html': chart1_html,
+        'chart1_insight': "Insight: Monthly distribution of tasks.",
         'chart2_html': chart2_html,
+        'chart2_insight': "Insight: Distribution of tasks across states.",
         'chart3_html': chart3_html,
+        'chart3_insight': "Insight: Comparison of monitors based on completed tasks.",
     }
 
     return render(request, 'monitors.html', context)
+
 
 def monitors_sqm(request):
     csv_file_path = 'static/data/monitor/sqm_monitors_jh.csv'  
@@ -275,30 +284,30 @@ def monitors_sqm(request):
     table_data = df.to_html(classes='table table-striped table-bordered', index=False)
 
     # Create charts for specific columns
-    fig1 = px.bar(df, x='MONTH', y=['COMP_S', 'ONGOING_S', 'MAINT_S', 'LSB_S'], title='Monthly Counts')
+    fig1 = px.bar(df, x='MONTH', y=['COMPLETED', 'ONGOING_S', 'MAINTENANCE', 'BRIDGE'], title='Monthly Counts')
     fig2 = px.pie(df, names='DISTRICT_NAME', title='District-wise Distribution')
 
     # Compare monitors based on the total number of completed tasks
-    best_monitor = df.loc[df['COMP_S'].idxmax()]
-    worst_monitor = df.loc[df['COMP_S'].idxmin()]
+    best_monitor = df.loc[df['COMPLETED'].idxmax()]
+    worst_monitor = df.loc[df['COMPLETED'].idxmin()]
 
     fig3 = px.bar(
-        df, x='MONITOR_NAME', y='COMP_S', 
+        df, x='MONITOR_NAME', y='COMPLETED', 
         title='Comparison of Monitors based on Completed Tasks',
-        labels={'COMP_S': 'Completed Tasks'},
+        labels={'COMPLETED': 'Completed Tasks'},
     )
     fig3.update_layout(
         annotations=[
             dict(
-                x=best_monitor['MONITOR_NAME'], y=best_monitor['COMP_S'],
+                x=best_monitor['MONITOR_NAME'], y=best_monitor['COMPLETED'],
                 xref="x", yref="y",
-                text=f"Best Monitor: {best_monitor['MONITOR_NAME']} ({best_monitor['COMP_S']} tasks)",
+                text=f"Best Monitor: {best_monitor['MONITOR_NAME']} ({best_monitor['COMPLETED']} tasks)",
                 showarrow=True, arrowhead=7, ax=4, ay=-40
             ),
             dict(
-                x=worst_monitor['MONITOR_NAME'], y=worst_monitor['COMP_S'],
+                x=worst_monitor['MONITOR_NAME'], y=worst_monitor['COMPLETED'],
                 xref="x", yref="y",
-                text=f"Worst Monitor: {worst_monitor['MONITOR_NAME']} ({worst_monitor['COMP_S']} tasks)",
+                text=f"Worst Monitor: {worst_monitor['MONITOR_NAME']} ({worst_monitor['COMPLETED']} tasks)",
                 showarrow=True, arrowhead=7, ax=4, ay=-40
             )
         ]
@@ -466,7 +475,13 @@ def finding_disc(path):
                                 'Maintenance_Works': 'Maintenance Works'})
 
     fig.update_layout(scene=dict(aspectmode="cube"))
+    anomaly_data = df[df['outlier'] == 1]
+    anomaly_table_with_location = anomaly_data[['Location', 'Total_Inspection_Completed_Works', 'Ongoing_Works', 'Maintenance_Works', 'outlier']]
+    table_fig = ff.create_table(anomaly_table_with_location)
+    table_html = opy.plot(table_fig, auto_open=False, output_type='div')
     fig.show()
+    return table_html
+
 
 
 def disrepancies(request):
@@ -477,5 +492,13 @@ def disrepancies(request):
         filename = fs.save(uploaded_file.name, uploaded_file)
         filepath = fs.url(filename)
         new_filepath = f'/Users/pranaymishra/Desktop/sih1429/ommas_main/{filepath}'
-        finding_disc(new_filepath)
+        table_html = finding_disc(new_filepath)
+        data = pd.read_csv(f'/Users/pranaymishra/Desktop/sih1429/ommas_main/{filepath}')
+
+        prompt = f"Generate an actionable insightfull report for the uploaded CSV file:\n{data.head()}"
+        
+        generated_report = generate_prompt(prompt)
+
+        context = {'generated_report': generated_report,'table_html':table_html}
+        return render(request, 'discrepancies.html', context)
     return render(request,'discrepancies.html')

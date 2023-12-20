@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Indian States Map</title>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <style>
+    path {
+      fill: #ccc;
+      stroke: #fff;
+      stroke-width: 1;
+    }
+  </style>
+</head>
+<body>
+
+<svg id="map-container" width="800" height="600"></svg>
+
+<script>
+  // Dummy data (replace with your actual data)
+  var stateData = [
+    { state: 'Andhra Pradesh', value: Math.random() },
+    { state: 'Arunachal Pradesh', value: Math.random() },
+    // Add more states and values as needed
+  ];
+
+  // Load GeoJSON data
+  d3.json('/Users/pranaymishra/Desktop/sih1429/ommas_main/static/data/india_state_geo.json').then(function (geojson) {
+    // Create projection and path
+    var projection = d3.geoMercator().fitSize([800, 600], geojson);
+    var path = d3.geoPath().projection(projection);
+
+    // Render the map
+    d3.select('#map-container')
+      .selectAll('path')
+      .data(geojson.features)
+      .enter()
+      .append('path')
+      .attr('d', path)
+      .style('fill', function (d) {
+        // Get the corresponding data value for the state
+        var stateDatum = stateData.find(item => item.state === d.properties.name);
+        // Set a random color based on the dummy value
+        var fillColor = d3.interpolateBlues(stateDatum.value);
+        return fillColor;
+      })
+      .on('mouseover', function (event, d) {
+        // Add tooltip or highlight logic if needed
+        d3.select(this).style('fill', 'orange');
+      })
+      .on('mouseout', function (event, d) {
+        // Revert to the original color on mouseout
+        var stateDatum = stateData.find(item => item.state === d.properties.name);
+        var fillColor = d3.interpolateBlues(stateDatum.value);
+        d3.select(this).style('fill', fillColor);
+      });
+  });
+</script>
+
+</body>
+</html>
