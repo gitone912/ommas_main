@@ -19,6 +19,6 @@ urlpatterns = [
     path('report_nlp/',report_nlp, name='nlp_report'),
     path('monitors/',monitors,name='monitors'),
     path('monitors_sqm',monitors_sqm,name='monitors_sqm'),
-    path('discrepancies/', visualization_view, name='visualization'),
+    path('discrepancies/', disrepancies, name='disc'),
     
 ]

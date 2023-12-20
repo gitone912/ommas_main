@@ -402,5 +402,82 @@ def visualization_view(request):
     return render(request, 'visualization.html', {'fig': fig})
 
 
+def finding_disc(path):
+
+    df = pd.read_csv(path)
+    if pd.api.types.is_numeric_dtype(df['Total_Inspection_Completed_Works']):
+        df['Total_Inspection_Completed_Works'] = df['Total_Inspection_Completed_Works'].astype(float)
+    else:
+        df['Total_Inspection_Completed_Works'] = df['Total_Inspection_Completed_Works'].str.replace(',', '').astype(float)
+
+    # List of columns to convert to numeric after removing '%'
+    percentage_columns = ['Completed_Works_U%', 'Ongoing_Works', 'Ongoing_U%', 'Maintenance_Works', 'Maintenance_U%', 'Bridge_Works', 'Bridge_U%']
+
+    # Loop through the columns and convert to numeric after removing '%'
+    for col in percentage_columns:
+        # Check if the column is already numeric
+        if not pd.api.types.is_numeric_dtype(df[col]):
+            df[col] = df[col].str.rstrip('%').astype('float') / 100.0
+    df['Total_Inspection'] = pd.to_numeric(df['Total_Inspection'].str.replace(',', ''), errors='coerce')
+
+    # Check and convert 'Total_Inspection_Completed_Works'
+    if pd.api.types.is_numeric_dtype(df['Total_Inspection_Completed_Works']):
+        df['Total_Inspection_Completed_Works'] = df['Total_Inspection_Completed_Works'].astype(float)
+    else:
+        df['Total_Inspection_Completed_Works'] = df['Total_Inspection_Completed_Works'].str.replace(',', '').astype(float)
+
+    # List of columns to convert to numeric after removing '%'
+    percentage_columns = ['Completed_Works_U%', 'Ongoing_Works', 'Ongoing_U%', 'Maintenance_Works', 'Maintenance_U%', 'Bridge_Works', 'Bridge_U%']
+
+    # Loop through the columns and convert to numeric after removing '%'
+    for col in percentage_columns:
+        # Check if the column is already numeric
+        if not pd.api.types.is_numeric_dtype(df[col]):
+            df[col] = df[col].str.rstrip('%').astype('float') / 100.0
+
+    # Identify numeric columns
+    numeric_columns = df.select_dtypes(include=['number']).columns
+
+    # Impute missing values for each numeric column separately
+    imputer = SimpleImputer(strategy='mean')
+    for col in numeric_columns:
+        df[col] = imputer.fit_transform(df[[col]])
+
+    # Isolation Forest
+    features = df[['Total_Inspection_Completed_Works', 'Completed_Works_U%', 'Ongoing_Works', 'Ongoing_U%',
+                        'Maintenance_Works', 'Maintenance_U%', 'Bridge_Works', 'Bridge_U%', 'Total_Inspection']]
+
+    scaler = StandardScaler()
+    features_scaled = scaler.fit_transform(features)
+
+    iso_forest = IsolationForest(random_state=42, contamination=0.05)
+    df['outlier'] = iso_forest.fit_predict(features_scaled)
+
+    # Accuracy Score
+    true_labels = [1 if x == 1 else -1 for x in df['outlier']]
+    predicted_labels = iso_forest.predict(features_scaled)
+    accuracy = accuracy_score(true_labels, predicted_labels)
+
+    print(f'Isolation Forest Accuracy: {accuracy}')
+
+    # Visualization using Plotly
+    fig = px.scatter_3d(df, x='Total_Inspection_Completed_Works', y='Ongoing_Works', z='Maintenance_Works',
+                        color='outlier', title='Isolation Forest Outliers',
+                        labels={'Total_Inspection_Completed_Works': 'Completed Works',
+                                'Ongoing_Works': 'Ongoing Works',
+                                'Maintenance_Works': 'Maintenance Works'})
+
+    fig.update_layout(scene=dict(aspectmode="cube"))
+    fig.show()
+
+
 def disrepancies(request):
+    if request.method == 'POST' and request.FILES['csv_file']:
+        # Handle the uploaded CSV file
+        uploaded_file = request.FILES['csv_file']
+        fs = FileSystemStorage()
+        filename = fs.save(uploaded_file.name, uploaded_file)
+        filepath = fs.url(filename)
+        new_filepath = f'/Users/pranaymishra/Desktop/sih1429/ommas_main/{filepath}'
+        finding_disc(new_filepath)
     return render(request,'discrepancies.html')
