@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+{% if user.is_authenticated %}
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
@@ -74,4 +75,13 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    {% else %}
+    <div class="max-w-md w-full bg-white p-8 rounded-md shadow-md">
+        <p class="text-red-500">You must be authenticated to access this page.</p>
+        <p class="mt-4">Purchase our subscription to continue.</p>
+        <a href="/"><button class="mt-4 bg-green-500 text-white p-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring focus:border-green-300">
+            Buy Subscription
+        </button></a>
+    </div>
+{% endif %}
 {%endblock%}

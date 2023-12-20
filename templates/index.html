@@ -4,6 +4,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.2/d3.min.js"></script>
 <script type='text/javascript' src='https://www.google.com/jsapi'></script>
 
+
                     <div class="grid grid-cols-12 gap-6">
                         <div class="grid grid-cols-12 col-span-12 gap-6 xxl:col-span-9">
                             <div class="col-span-12 mt-8">
@@ -84,7 +85,7 @@
                                         </div>
                                     </a>
                                     <a class="transform  hover:scale-105 transition duration-300 shadow-xl rounded-lg col-span-12 sm:col-span-6 xl:col-span-3 intro-y bg-white"
-                                        href="#">
+                                        href="{% url "joint_inspection" %}">
                                         <div class="p-5">
                                             <div class="flex justify-between">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-pink-600"
@@ -162,23 +163,61 @@
                                             
                                         </div>
                                     </a>
+                                    <a class="transform  hover:scale-105 transition duration-300 shadow-xl rounded-lg col-span-12 sm:col-span-6 xl:col-span-3 intro-y bg-white"
+                                        href="{% url "pipeline" %}">
+                                        <div class="p-5">
+                                            <div class="flex justify-between">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-green-400"
+                                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                                                </svg>
+                                                <div
+                                                    class="bg-green-500 rounded-full h-6 px-2 flex justify-items-center text-white font-semibold text-sm">
+                                                    <span class="flex items-center">New</span>
+                                                </div>
+                                            </div>
+                                            <div class="ml-2 w-full flex-1">
+                                                <div class="ml-2 w-full flex-1">
+                                                    <div>
+                                                        <div class="mt-3 text-3xl font-bold leading-8">Pipeline data preprocessing</div>
+            
+                                                        <div class="mt-1 text-base text-gray-600">Ask</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </a>
                                     
                                 </div>
                             </div>
                             <div class="col-span-12 mt-5">
-                                <h3>Regraded Grading Abstract for the year 2021-23</h3>
-                                <div class="grid gap-2 grid-cols-1 lg:grid-cols-2">
-                            
-                                    <div class="bg-white shadow-lg" id="visualization"></div>
-                                     
-                                    <div class="bg-white shadow-lg p-4" id="graph-container"></div>
-                                    
-                            
+                                <div class="bg-white shadow-lg p-4 text-center">
+                                    <h3 class="text-lg font-semibold">Regraded Grading Abstract for the year 2021-23</h3>
                                 </div>
+                                
+                                <div class="bg-white shadow-lg p-4 flex justify-between" id="details-container">
+                                    <p id="left-details">Details for Inspection in States from 2021 - 2023 <br> Scale : Less to More Inspection</p>
+                                   
+                                </div>
+                                <div class="grid gap-2 grid-cols-1 lg:grid-cols-2">
+                                    <div class="bg-white shadow-lg" id="visualization"></div>
+                                    
+                                </div>
+                                
+                               
                                
                                    
                                   
                             </div>
+                           
+
+    <canvas id="myChart"></canvas>
+
+   
+
                             
                         </div>
                     </div>
@@ -186,538 +225,40 @@
             </main>
         </div>
     </div>
-    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
-        var definitionVisualization = {};
-
-(function (visualization) {
-
-    visualization.donut = {};
-
-    var topLevelItem = {label: "Channel"};
-
-    var subSubData = [
-        {colorIndex: 10, value: 3075, label: "Label 1"},
-        {colorIndex: 11, value: 6150, label: "Label 2"},
-        {colorIndex: 12, value: 6832, label: "Label 3"},
-        {colorIndex: 13, value: 7516, label: "Label 4"},
-        {colorIndex: 14, value: 6291, label: "Label 5"}
-    ];
-
-    var subData = [
-        {colorIndex: 5, value: 1000, label: "Region 1"},
-        {colorIndex: 6, value: 1000, label: "Region 2"},
-        {colorIndex: 7, value: 1000, label: "Region 3"},
-        {colorIndex: 8, value: 1000, label: "Region 4"},
-        {colorIndex: 9, value: 5000, childData: subSubData, label: "Region 5"}
-    ];
-
-    var data = [
-        {colorIndex: 0, value: 25, childData: subData, label: "MUmbai"},
-        {colorIndex: 1, value: 25, childData: subData, label: "Chennai"},
-        {colorIndex: 2, value: 16.66667, childData: subData, label: "Goa"},
-        {colorIndex: 3, value: 16.66667, childData: subData, label: "Mobile"},
-        {colorIndex: 4, value: 16.66667, childData: subData, label: "In-Store"}
-    ];
-
-    var dataOriginal = data.slice(0); //Keep a record around for book-keeping purposes
-
-    var selectedPath = [];
-
-    function endall(transition, callback) {
-        var n = 0;
-        transition
-            .each(function () {
-                ++n;
-            })
-            .each("end", function () {
-                if (!--n) callback.apply(this, arguments);
-            });
-    }
-
-    // Global Variables
-
-    var margin = {top: 50, right: 0, bottom: 10, left: 127.5};
-    var width = 555;
-    var height = 800;
-
-    var radius = 150;
-
-    var transformAttrValue = function (adjustLeft) {
-        var leftValue = margin.left + radius;
-        if (adjustLeft) {
-            leftValue = leftValue + adjustLeft;
-        }
-        return "translate(" + leftValue + "," + (margin.top + radius) + ")";
-    }
-    var colorRange = ["#ffb822","#00bf8c","#219ddb","#ad85cc","#f95275","#80B647","#11AEB4","#6791D4","#D36CA1","#FC803B"];
-  
-    var colors = d3.scale.ordinal().range(colorRange);
-
-    var chart, chartLabelsGroup, chartCenterLabelGroup, chartCenterLabel,
-        arc, arcSmall, pie, path, chartSelect, chartSelectTertiary, arcOver;
-
-    function zoomIn(d) {
-
-        if (!d.data.childData) {
-            //At deepest available level
-            return false;
-        }
-
-        var sel = d3.select(this);
-
-        //Search the current path to see the counter where it was selected. (Also update selected path)
-
-        for (var i = 0; i < path[0].length; i++) {
-            if (path[0][i] == sel[0][0]) {
-                selectedPath.push(i);
-                break;
-            }
-        }
-
-        sel.attr("d", arc);
-
-        var startAngle = d.startAngle;
-        var endAngle = d.endAngle;
-
-        var arcSelect = d3.svg.arc()
-            .startAngle(function (s) {
-                return startAngle;
-            })
-            .endAngle(function (s) {
-                return endAngle;
-            })
-            .innerRadius(function (i) {
-                return radius - 20
-            })
-            .outerRadius(function (o) {
-                return radius * 1.1
-            });
-
-        var newArc = chartSelect.append('path')
-            .style("fill", colors(d.data.colorIndex))
-            .attr("d", arcSelect)
-            .on("click", zoomOut(d));
-
-        newArc.transition()
-            .duration(1000)
-            .attrTween("d", function () {
-                var newAngle = d.startAngle + 2 * Math.PI;
-                var interpolate = d3.interpolate(d.endAngle, newAngle);
-                return function (tick) {
-                    endAngle = interpolate(tick);
-                    return arcSelect(d);
-                };
-            })
-            .each("end", zoomInSweepEnded(d.data.childData))
-
-    }
-
-    function zoomOut(clickedItem, selectedItem) {
-
-        return function () {
-
-            //Determine the current parent item while zooming.
-
-            var currentItem = getCurrentItemData(1);
-            selectedPath.pop(); //Update the path
-
-            //If we have another parent we need to show the zoom further out arc.
-
-            if (selectedPath.length > 0) {
-                chartSelectTertiary.attr("style", "");
-                chartSelectTertiary.on("click", function () {
-                    //TODO: Fix this!!!
-                  zoomOut({startAngle: 0, endAngle:0}, chartSelectTertiary.select("path"))();
-                });
-            }
-
-            //Proceed with animations
-
-            selectedItem = selectedItem || d3.select(this);
-
-            selectedItem.on("click", null);
-
-            zoomZeArc(selectedItem, true, function () {
-
-                var startAngle = clickedItem.startAngle;
-                var endAngle = clickedItem.startAngle + 2 * Math.PI;
-
-                var arcSelect = d3.svg.arc()
-                    .startAngle(function (s) {
-                        return startAngle;
-                    })
-                    .endAngle(function (s) {
-                        return endAngle;
-                    })
-                    .innerRadius(function (i) {
-                        return radius - 20
-                    })
-                    .outerRadius(function (o) {
-                        return radius * 1.1
-                    });
-
-                var arcFinal = d3.svg.arc()
-                    .startAngle(function (s) {
-                        return startAngle;
-                    })
-                    .endAngle(function (s) {
-                        return endAngle;
-                    })
-                    .outerRadius(radius)
-                    .innerRadius(radius - 20);
-
-                selectedItem.transition()
-                    .duration(750)
-                    .attrTween("d", function () {
-                        var newAngle = clickedItem.startAngle + 2 * Math.PI;
-                        var interpolate = d3.interpolate(newAngle, clickedItem.endAngle);
-                        return function (tick) {
-                            endAngle = interpolate(tick);
-                            return arcSelect(clickedItem);
-                        };
-                    })
-                    .each("end", function () {
-                        selectedItem.transition()
-                            .ease("bounce")
-                            .duration(500)
-                            .attr("d", arcFinal)
-                            .each("end", function () {
-                                //Finished animating and bouncing
-                                d3.select(".secondary").html("");
-                            });
-                    });
-
-            });
-
-            path
-                .transition()
-                .ease("back-in-out")
-                .duration(750)
-                .attr("transform", "scale(.5), rotate(-90)")
-                .style("opacity", 0)
-                .call(endall, function () {
-
-                    path
-                        .attr("transform", "scale(1), rotate(0)")
-                        .style("opacity", 1)
-                        .data(pie(currentItem))
-                        .style("fill", function (d) {
-                            return colors(d.data.colorIndex);
-                        })
-                        .attr("d", arc)
-                        .on("click", zoomIn)
-                        .each(function (d, counter) {
-                            //this._current = d;)
-                        }); // store the initial angles
-
-                    updatePieLabels();
-
-                })
-
-        }
-    }
-
-    function zoomInSweepEnded(childData) {
-
-        return function () {
-
-            chartSelectTertiary.attr("style", "display: none");
-
-            var selectedItem = d3.select(this);
-
-            path
-                .attr("transform", "scale(0.5), rotate(-90)")
-                .style("opacity", 0);
-
-            path
-                .data(pie(childData))
-                .style("fill", function (d) {
-                    return colors(d.data.colorIndex);
-                })
-                .attr("d", arc);
-
-            updatePieLabels();
-
-            path
-                .transition()
-                .ease("back-in-out")
-                .duration(750)
-                .attr("transform", "scale(1), rotate(0)")
-                .style("opacity", 1)
-                .call(function () {
-                    //Finished scaling
-                });
-            ;
-
-            d3.selectAll(".zoom-out")
-                .transition()
-                .ease("back-in-out")
-                .duration(750)
-                .attr("transform", "scale(1.25)")
-                .style("opacity", 0)
-                .remove()
-                .call(function () {
-                    //Finished zooming out
-                });
-
-            setTimeout(function () {
-                var secondaryHtml = d3.select(".secondary").html();
-                d3.select(".tertiary").html(secondaryHtml);
-            }, 850);
-
-            zoomZeArc(selectedItem, false);
-
-        }
-    }
-
-    function zoomZeArc(selectedItem, reverse, callback) {
-
-        var zoomScale = 1.25;
-
-        var origOuterRadius = radius * 1.1;
-        var origInnerRadius = radius - 20;
-
-        var finalInnerRadius = radius * zoomScale;
-
-        var curInnerRadius = origInnerRadius;
-        var curOuterRadius = origOuterRadius;
-
-        var arcZoom = d3.svg.arc()
-            .startAngle(0)
-            .endAngle(2 * Math.PI)
-            .outerRadius(function () {
-                return (curOuterRadius);
-            })
-            .innerRadius(function () {
-                return (curInnerRadius);
-            });
-
-        if (!reverse) {
-            selectedItem.attr("class", "zoom-out");
-        }
-
-        selectedItem
-            .transition()
-            .ease("back-in-out")
-            .duration(750)
-            .attrTween("d", function () {
-                var iInner = reverse ? d3.interpolate(finalInnerRadius, origInnerRadius) : d3.interpolate(origInnerRadius, finalInnerRadius);
-                return function (tick) {
-                    curInnerRadius = iInner(tick);
-                    curOuterRadius = origOuterRadius + ((curInnerRadius - origInnerRadius) / 1.75);
-                    return arcZoom(selectedItem);
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [{% for item in india_data %}"{{ item.Location }}",{% endfor %}],
+                datasets: [{
+                    label: 'Total Inspection Completed Works from 2021-2023',
+                    data: [{% for item in india_data %}{{ item.Total_Inspection_Completed_Works }},{% endfor %}],
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                onClick: function (event, elements) {
+                    if (elements.length > 0) {
+                        var clickedLabel = myChart.data.labels[elements[0].index];
+                        drillDown(clickedLabel);
+                    }
                 }
-            })
-            .each("end", function () {
-                if (callback) {
-                    callback();
-                }
-            });
-
-    }
-
-
-    function updatePieLabels() {
-
-        chartCenterLabel.text(getCurrentItem().label);
-
-        //Updates pie chart labels. Needs to be after path data gets set!
-
-        chartLabelsGroup.html("");
-
-        var sliceLabels = chartLabelsGroup.selectAll("text").data(pie(path.data()))
-        var currentData = getCurrentItemData();
-
-        sliceLabels
-            .enter()
-            .append("text")
-            .style("opacity", 0)
-            .transition().duration(750)
-            .style("opacity", 1)
-            .attr("class","outer-label")
-            .attr("transform", function(d) {
-                return "translate(" + arcSmall.centroid(d) + ")";
-            })
-            .text(function(d ,i) {
-                return currentData[i].label;
-            });
-
-    }
-
-    function getCurrentItem() {
-        if (selectedPath.length == 0) {
-            return topLevelItem;
-        }
-        var currentItem = data;
-        for (var i = 0; i < selectedPath.length; i++) {
-            if (i + 1 < selectedPath.length) {
-                currentItem = currentItem[selectedPath[i]].childData;
-            } else {
-                currentItem = currentItem[selectedPath[i]];
             }
-        }
-        return currentItem;
-    }
-
-    function getCurrentItemAsBreadCrumbs() {
-        if (selectedPath.length == 0) {
-            return [topLevelItem.label];
-        }
-        var currentItem = data;
-        var returnList = [topLevelItem.label];
-        for (var i = 0; i < selectedPath.length; i++) {
-            returnList.push(currentItem[selectedPath[i]].label);
-            if (i + 1 < selectedPath.length) {
-                currentItem = currentItem[selectedPath[i]].childData;
-            } else {
-                currentItem = currentItem[selectedPath[i]];
-            }
-        }
-        return returnList;
-    }
-
-    function getCurrentItemData(startIndex) {
-        startIndex = startIndex | 0;
-        var currentItem = data;
-        for (var i = startIndex; i < selectedPath.length; i++) {
-            currentItem = currentItem[selectedPath[i]].childData
-        }
-        return currentItem;
-    }
-
-    function getRandomNumberInRange(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    visualization.donut.getBreadCrumbs = function() {
-        return getCurrentItemAsBreadCrumbs();
-    };
-
-    visualization.donut.randomize = function() {
-
-        //Set some random dataz and animate it
-
-        var currentDataLevel = getCurrentItemData();
-        for (var i=0; i<currentDataLevel.length; i++) {
-            currentDataLevel[i].value = currentDataLevel[i].value * getRandomNumberInRange(75, 125) / 100.0;
-        }
-
-        path.data(pie(currentDataLevel))
-
-        path.transition().duration(750).attrTween("d", function(a) {
-            var i = d3.interpolate(this._current, a);
-            this._current = i(0);
-            return function(t) {
-                return arc(i(t));
-            };
         });
 
-    };
-
-    visualization.donut.show = function () {
-
-        var svgContainer = d3.select("#graph-container");
-        svgContainer.html("");
-
-        data = dataOriginal.slice(0);
-        selectedPath = [];
-
-        // Primary Chart
-        chart = svgContainer
-            .append("svg")
-            .attr("id", "svg-container")
-            .attr("width", width)
-            .attr("height", height)
-            .append("g")
-            .attr("class", "primary")
-            .attr("transform", transformAttrValue());
-
-        chartLabelsGroup = d3.select("#svg-container")
-            .append("g")
-            .attr("class", "labelGroup")
-            .attr("transform", transformAttrValue(-20));
-
-        chartCenterLabelGroup = d3.select("#svg-container")
-            .append("g")
-            .attr("class", "labelCenterGroup")
-            .attr("transform", transformAttrValue());
-
-        chartCenterLabel = chartCenterLabelGroup
-            .append("text")
-            .attr("dy", ".35em")
-            .attr("class", "chartLabel center")
-            .attr("text-anchor", "middle");
-
-        arc = d3.svg.arc()
-            .outerRadius(radius)
-            .innerRadius(radius - 20);
-
-        arcSmall = d3.svg.arc()
-            .outerRadius(radius - 40)
-            .innerRadius(radius - 80);
-
-        pie = d3.layout.pie()
-            .value(function (d) {
-                return d.value;
-            })
-            .sort(null);
-
-        path = chart.selectAll("path")
-            .data(pie(data))
-            .enter().append("path")
-            .style("fill", function (d) {
-                return colors(d.data.colorIndex);
-            })
-            .attr("d", arc)
-            .each(function (d) {
-                this._current = d;
-            }); // store the initial angles
-
-        updatePieLabels();
-
-        // Secondary Chart
-        chartSelect = d3.select("svg")
-            .append("g")
-            .attr("class", "secondary")
-            .attr("transform", transformAttrValue());
-
-        // Tertiary Chart
-        chartSelectTertiary = d3.select("svg")
-            .append("g")
-            .attr("class", "tertiary")
-            .attr("style", "display:none")
-            .attr("transform", transformAttrValue());
-
-        // Arc Interaction Sizing
-        arcOver = d3.svg.arc()
-            .outerRadius(radius * 1.1)
-            .innerRadius(radius - 20);
-
-        path.on("mouseover", function () {
-            //return false;
-            d3.select(this).transition()
-                .ease("in")
-                .duration(100)
-                .attr("d", arcOver);
-        }).on("mouseout", function () {
-            //return false;
-            d3.select(this).transition()
-                .ease("bounce")
-                .duration(500)
-                .attr("d", arc);
-        }).on("click", zoomIn);
-
-    };
-
-    return visualization;
-
-}(definitionVisualization));
-
-definitionVisualization.donut.show();
+        
     </script>
-
+ 
     
     
     <script>
@@ -760,14 +301,15 @@ function drawVisualization() {
   ]);
 
       var opts = {
+        title: 'Total Inspection by State in India',
         region: 'IN',
         domain:'IN',
         displayMode: 'regions',
         colorAxis: {colors: ['#e5ef88', '#d4b114', '#e85a03']},
         resolution: 'provinces',
         defaultColor: '#f5f5f5',
-        width: 640, 
-        height: 480,
+        width: 1040, 
+        height: 580,
          
       };
       var geochart = new google.visualization.GeoChart(

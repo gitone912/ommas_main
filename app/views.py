@@ -113,13 +113,16 @@ def logout_view(request):
 
 
 def dashboard(request):
-    return render(request,'index.html')
+    with open('static/data/unsatisfactory_work_grade/sqm/indiasqm.csv', 'r') as file:
+        india_data = list(csv.DictReader(file))
+    return render(request,'index.html',{'india_data': india_data})
 
 from django.shortcuts import render
 
 def get_coordinates(request):
     pav_length = request.GET.get('pav_length', '')
     print("pav_length",pav_length)
+    
     if request.method == 'POST':
         try:
             lat1 = request.POST.get('lat', '')

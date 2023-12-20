@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-
+{% if user.is_authenticated %}
 
     <div class="max-w-md w-full bg-white p-8 rounded-md shadow-md">
         <h1 class="text-2xl font-bold mb-6">Joint Inspection CNN</h1>
@@ -28,6 +28,14 @@
 
     </div>
 
-
+    {% else %}
+        <div class="max-w-md w-full bg-white p-8 rounded-md shadow-md">
+            <p class="text-red-500">You must be authenticated to access this page.</p>
+            <p class="mt-4">Purchase our subscription to continue.</p>
+            <a href="/"><button class="mt-4 bg-green-500 text-white p-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring focus:border-green-300">
+                Buy Subscription
+            </button></a>
+        </div>
+    {% endif %}
 
 {% endblock %}
